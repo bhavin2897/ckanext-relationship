@@ -1,0 +1,9 @@
+{% set selected = h.relationship_get_selected_relations_list(field, data) %}
+{% for pack in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
+    {% for selected_id in selected %}
+        {% if pack['id'] == selected_id %}
+            <a href="{{ '/' + field.related_entity_type + '/' + pack['id'] }}">{{ pack['name'] }}</a>
+            <br>
+        {% endif %}
+    {% endfor %}
+{% endfor %}

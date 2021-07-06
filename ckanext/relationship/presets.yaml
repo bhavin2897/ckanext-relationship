@@ -1,0 +1,12 @@
+scheming_presets_version: 1
+about: scheming presets for relationship fields
+about_url: https://github.com/DataShades/ckanext-relationship
+presets:
+
+
+  - preset_name: related_entity
+    values:
+      form_snippet: related_entity.html
+      display_snippet: related_entity.html
+      validators: relationship_related_entity
+

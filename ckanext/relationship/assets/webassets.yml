@@ -1,0 +1,14 @@
+# relationship-js:
+#   filter: rjsmin
+#   output: ckanext-relationship/%(version)s-relationship.js
+#   contents:
+#     - js/relationship.js
+#   extra:
+#     preload:
+#       - base/main
+
+# relationship-css:
+#   filter: cssrewrite
+#   output: ckanext-relationship/%(version)s-relationship.css
+#   contents:
+#     - css/relationship.css

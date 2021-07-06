@@ -1,0 +1,49 @@
+{% import 'macros/form.html' as form %}
+{% macro help_text() %}
+    {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
+{% endmacro %}
+
+{% set selected = h.relationship_get_selected_relations_list(field, data) %}
+
+{%- call form.input_block(
+    'field-' + field.field_name,
+    label=h.scheming_language_text(field.label),
+    classes=['control-full'],
+    error=errors[field.field_name],
+    is_required=h.scheming_field_required(field),
+    extra_html=help_text()
+    ) -%}
+
+    {% set current_pkg_id = data.get('id', None) %}
+    {% set packages = h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
+    {%- set choices = [] -%}
+
+    {%- for pack in packages -%}
+        {% if pack.id != current_pkg_id %}
+            {%- do choices.append((pack.id, pack.name)) -%}
+        {% endif %}
+    {% endfor %}
+
+    {%- set choices = choices|sort(case_sensitive=false, attribute=1) -%}
+
+    {% if not h.scheming_field_required(field) and not field.multiple %}
+        {%- do choices.insert(0, ('', 'No relation')) -%}
+    {% endif %}
+
+    <select {% if field.multiple %}multiple{% endif %}
+            size='{{ field.get('select_size', field.choices|length) }}'
+            style='display: block'
+            id='field-{{ field.field_name }}'
+            name='{{ field.field_name }}'
+            {{ form.attributes(dict(
+        {'data-module': 'autocomplete'}, **field.get('form_select_attrs', {}))) }}>
+        {%- for val, label in choices -%}
+            <option id='field-{{ field.field_name }}-{{ val }}'
+                    value='{{ val }}'
+
+                    {{ 'selected ' if val in selected }} />
+            {{ label }}
+            </option>
+        {%- endfor -%}
+    </select>
+{%- endcall -%}
