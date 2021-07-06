@@ -31,10 +31,14 @@ def get_selected_relations_list(data, field):
     related_entity_type = data['related_entity_type']
     relation_type = data['relation_type']
 
-    current_relation_by_id = tk.get_action('relationship_relations_list')({}, {'subject_id': subject_id,
-                                                                               'object_entity': related_entity,
-                                                                               'object_type': related_entity_type,
-                                                                               'relation_type': relation_type})
+    if subject_id:
+        current_relation_by_id = tk.get_action('relationship_relations_list')({}, {'subject_id': subject_id,
+                                                                                   'object_entity': related_entity,
+                                                                                   'object_type': related_entity_type,
+                                                                                   'relation_type': relation_type})
+    else:
+        current_relation_by_id = []
+
     current_relation_by_name = tk.get_action('relationship_relations_list')({}, {'subject_id': subject_name,
                                                                                  'object_entity': related_entity,
                                                                                  'object_type': related_entity_type,

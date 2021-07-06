@@ -117,8 +117,8 @@ def get_entity_list(context, data_dict):
 
     entity_class = logic.model_name_to_class(model, entity)
 
-    entity_list = (context['session'].query(entity_class.id, entity_class.name)
-                   .filter(entity_class.state == 'active')
+    entity_list = (context['session'].query(entity_class.id, entity_class.name, entity_class.title)
+                   .filter(entity_class.state != 'deleted')
                    .filter(entity_class.type == entity_type).all())
 
     return entity_list
