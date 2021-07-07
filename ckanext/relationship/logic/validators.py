@@ -25,18 +25,21 @@ def related_entity(field, schema):
     relation_type = field.get('relation_type')
 
     def validator(key, data, errors, context):
-        if errors[key]:
-            return
-        entity_id = pkg_id = data.get(('id',))
-        entity_name = data[('name',)]
+        if field.get('required') and data[key] is missing:
+            errors[key].append(tk._('Select at least one'))
 
+        entity_id = data.get(('id',))
+        entity_name = data.get(('name',))
+
+        if errors[key] or not entity_name:
+            return
         if not entity_id or entity_id == entity_name:
             entities = tk.get_action('relationship_get_entity_list')(context, {'entity': field['current_entity'],
-                                                                               'entity_type': field['current_entity_type']})
+                                                                               'entity_type': field[
+                                                                                   'current_entity_type']})
             for entity in entities:
                 if entity[1] == entity_name:
                     entity_id = entity[0]
-
         current_relation_by_name = tk.get_action('relationship_relations_list')({}, {'subject_id': entity_name,
                                                                                      'object_entity': related_entity,
                                                                                      'object_type': related_entity_type,
@@ -50,7 +53,6 @@ def related_entity(field, schema):
                                                                    'object_id': related_entity_id,
                                                                    'relation_type': relation_type
                                                                    })
-
                 tk.get_action('relationship_relation_delete')({}, {'subject_id': entity_name,
                                                                    'object_id': related_entity_id,
                                                                    'relation_type': relation_type
@@ -67,7 +69,7 @@ def related_entity(field, schema):
         current_relation = set(current_relation)
 
         selected_relation = data[key]
-        if data[key] is not missing:
+        if selected_relation is not missing:
             selected_relation = scheming_multiple_choice_output(data[key])
             selected_relation = [] if selected_relation == [''] else selected_relation
         else:
@@ -83,7 +85,6 @@ def related_entity(field, schema):
             if related_entity_id in add_relation:
                 tk.get_action('relationship_relation_create')({}, {'subject_id': current_entity_id,
                                                                    'object_id': related_entity_id,
-                                                                   'object_entity': related_entity,
                                                                    'relation_type': relation_type
                                                                    })
             else:
@@ -92,9 +93,6 @@ def related_entity(field, schema):
                                                                    'relation_type': relation_type
                                                                    })
 
-        if not errors[key]:
-            data[key] = json.dumps([value for value in selected_relation])
-            if field.get('required') and not selected_relation:
-                errors[key].append(tk._('Select at least one'))
+        data[key] = json.dumps([value for value in selected_relation])
 
     return validator

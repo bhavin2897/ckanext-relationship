@@ -3,7 +3,10 @@
     {%- snippet 'scheming/form_snippets/help_text.html', field=field -%}
 {% endmacro %}
 
-{% set selected = h.relationship_get_selected_relations_list(field, data) %}
+{% set selected = h.relationship_get_current_relations_list(field, data) %}
+{% if not selected %}
+    {% set selected = data[field.field_name] %}
+{% endif %}
 
 {%- call form.input_block(
     'field-' + field.field_name,
@@ -18,9 +21,9 @@
     {% set packages = h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
     {%- set choices = [] -%}
 
-    {%- for pack in packages -%}
-        {% if pack.id != current_pkg_id %}
-            {%- do choices.append((pack.id, pack.name)) -%}
+    {%- for pkg in packages -%}
+        {% if pkg.id != current_pkg_id %}
+            {%- do choices.append((pkg.id, pkg.name)) -%}
         {% endif %}
     {% endfor %}
 
