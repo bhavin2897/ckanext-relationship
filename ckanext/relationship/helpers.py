@@ -15,9 +15,15 @@ def get_helpers():
 @helper
 def get_entity_list(entity, entity_type, include_private=True):
     context = {}
-    entity_list = tk.get_action('relationship_get_entity_list')(context, {'entity': entity,
-                                                                          'entity_type': entity_type})
-
+    if entity == 'package':
+        entity_list = tk.get_action('package_search')(context, {'fq': f'type:{entity_type}',
+                                                                'fl': 'id, name, title',
+                                                                'include_private': include_private})
+        entity_list = entity_list['results']
+    else:
+        entity_list = tk.get_action('relationship_get_entity_list')(context, {'entity': entity,
+                                                                              'entity_type': entity_type})
+        entity_list = [{'id': id, 'name': name, 'title': title} for id, name, title in entity_list]
     return entity_list
 
 

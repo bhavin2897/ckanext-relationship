@@ -30,5 +30,6 @@ def relation_delete(context, data_dict):
     return {'success': True}
 
 @auth
+@tk.auth_allow_anonymous_access
 def get_entity_list(context, data_dict):
     return {'success': True}
