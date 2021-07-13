@@ -23,7 +23,7 @@
 
     {% for pkg in packages %}
         {% if pkg.id != current_pkg_id %}
-            {% do choices.append((pkg.id, pkg.title)) %}
+            {% do choices.append((pkg.id, pkg.get('title') or pkg.get('name'))) %}
         {% endif %}
     {% endfor %}
 
