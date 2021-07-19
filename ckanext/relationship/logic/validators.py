@@ -29,70 +29,41 @@ def related_entity(field, schema):
             errors[key].append(tk._('Select at least one'))
 
         entity_id = data.get(('id',))
-        entity_name = data.get(('name',))
 
-        if errors[key] or not entity_name:
-            return
-        if not entity_id or entity_id == entity_name:
-            entities = tk.get_action('relationship_get_entity_list')(context, {'entity': field['current_entity'],
-                                                                               'entity_type': field[
-                                                                                   'current_entity_type']})
-            for entity in entities:
-                if entity[1] == entity_name:
-                    entity_id = entity[0]
-        current_relation_by_name = tk.get_action('relationship_relations_list')({}, {'subject_id': entity_name,
-                                                                                     'object_entity': related_entity,
-                                                                                     'object_type': related_entity_type,
-                                                                                     'relation_type': relation_type})
-        current_relation_by_name = [rel['object_id'] for rel in current_relation_by_name]
-        current_relation_by_name = set(current_relation_by_name)
+        current_relations = _get_current_relations(entity_id, related_entity, related_entity_type, relation_type)
+        selected_relations = _get_selected_relations(data[key])
 
-        if current_relation_by_name:
-            for related_entity_id in current_relation_by_name:
-                tk.get_action('relationship_relation_create')({}, {'subject_id': entity_id,
-                                                                   'object_id': related_entity_id,
-                                                                   'relation_type': relation_type
-                                                                   })
-                tk.get_action('relationship_relation_delete')({}, {'subject_id': entity_name,
-                                                                   'object_id': related_entity_id,
-                                                                   'relation_type': relation_type
-                                                                   })
+        data[key] = json.dumps([value for value in selected_relations])
 
-        if entity_id:
-            current_relation = tk.get_action('relationship_relations_list')({}, {'subject_id': entity_id,
-                                                                                 'object_entity': related_entity,
-                                                                                 'object_type': related_entity_type,
-                                                                                 'relation_type': relation_type})
-            current_relation = [rel['object_id'] for rel in current_relation]
-        else:
-            current_relation = []
-        current_relation = set(current_relation)
+        add_relations = selected_relations - current_relations
+        del_relations = current_relations - selected_relations
 
-        selected_relation = data[key]
-        if selected_relation is not missing:
-            selected_relation = scheming_multiple_choice_output(data[key])
-            selected_relation = [] if selected_relation == [''] else selected_relation
-        else:
-            selected_relation = []
-        selected_relation = set(selected_relation)
+        data[('add_relations',)] = data.get(('add_relations',), [])
+        data[('del_relations',)] = data.get(('del_relations',), [])
 
-        add_relation = selected_relation - current_relation
-        del_relation = current_relation - selected_relation
-
-        current_entity_id = entity_id or entity_name
-
-        for related_entity_id in add_relation | del_relation:
-            if related_entity_id in add_relation:
-                tk.get_action('relationship_relation_create')({}, {'subject_id': current_entity_id,
-                                                                   'object_id': related_entity_id,
-                                                                   'relation_type': relation_type
-                                                                   })
-            else:
-                tk.get_action('relationship_relation_delete')({}, {'subject_id': current_entity_id,
-                                                                   'object_id': related_entity_id,
-                                                                   'relation_type': relation_type
-                                                                   })
-
-        data[key] = json.dumps([value for value in selected_relation])
+        data[('add_relations',)].extend([(rel, relation_type) for rel in add_relations])
+        data[('del_relations',)].extend([(rel, relation_type) for rel in del_relations])
 
     return validator
+
+
+def _get_current_relations(entity_id, related_entity, related_entity_type, relation_type):
+    if entity_id:
+        current_relations = tk.get_action('relationship_relations_list')({}, {'subject_id': entity_id,
+                                                                              'object_entity': related_entity,
+                                                                              'object_type': related_entity_type,
+                                                                              'relation_type': relation_type})
+        current_relations = [rel['object_id'] for rel in current_relations]
+    else:
+        current_relations = []
+    return set(current_relations)
+
+
+def _get_selected_relations(selected):
+    selected_relations = selected
+    if selected_relations is not missing:
+        selected_relations = scheming_multiple_choice_output(selected)
+        selected_relations = [] if selected_relations == [''] else selected_relations
+    else:
+        selected_relations = []
+    return set(selected_relations)
