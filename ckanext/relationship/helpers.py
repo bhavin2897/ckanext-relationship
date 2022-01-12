@@ -18,6 +18,7 @@ def get_entity_list(entity, entity_type, include_private=True):
     if entity == 'package':
         entity_list = tk.get_action('package_search')(context, {'fq': f'type:{entity_type}',
                                                                 'fl': 'id, name, title',
+                                                                'rows': 1000,
                                                                 'include_private': include_private})
         entity_list = entity_list['results']
     else:
