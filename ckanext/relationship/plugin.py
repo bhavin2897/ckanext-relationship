@@ -6,6 +6,7 @@ import ckanext.relationship.logic.auth as auth
 import ckanext.relationship.logic.validators as validators
 import ckanext.scheming.helpers as sch
 from ckan.lib.search import rebuild
+from ckan.logic import NotFound
 
 
 class RelationshipPlugin(plugins.SingletonPlugin):
@@ -86,6 +87,11 @@ def _update_relations(pkg_dict):
                                                                'object_id': object_id,
                                                                'relation_type': relation_type
                                                                })
-        rebuild(object_id)
+        
+        try:
+            tk.get_action('package_show')({}, {'id': object_id})
+            rebuild(object_id)
+        except NotFound:
+            pass
     rebuild(subject_id)
     return pkg_dict

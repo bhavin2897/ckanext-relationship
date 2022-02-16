@@ -1,9 +1,18 @@
-{% set selected = h.relationship_get_current_relations_list(field, data) %}
-{% for pkg in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
-    {% for selected_id in selected %}
-        {% if pkg['id'] == selected_id %}
-            <a href="{{ '/' + field.related_entity_type + '/' + pkg['name'] }}">{{ pkg['title'] }}</a>
-            <br>
-        {% endif %}
-    {% endfor %}
+{% set selected_ids = h.relationship_get_current_relations_list(field, data) %}
+
+{% set selected = [] %}
+
+{% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
+  {% for selected_id in selected_ids %}
+    {% if entity['id'] == selected_id %}
+      {% do selected.append((entity.get('name'), entity.get('title') or entity.get('name'))) %}
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+{% set selected = selected|sort(case_sensitive=false, attribute=1) %}
+
+{% for name, title in selected %}
+  <a href="{{ h.url_for(field.related_entity_type + ".read", id=name, _external=True) }}">{{ title }}</a>
+  <br>
 {% endfor %}

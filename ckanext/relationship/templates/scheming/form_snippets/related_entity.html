@@ -8,10 +8,15 @@
     {% set selected = data[field.field_name] %}
 {% endif %}
 
+{% set classes = ['control-full'] %}
+{% if field.hidden_from_form %}
+  {% do classes.append('hidden') %}
+{% endif %}
+
 {% call form.input_block(
     'field-' + field.field_name,
     label=h.scheming_language_text(field.label),
-    classes=['control-full'],
+    classes=classes,
     error=errors[field.field_name],
     is_required=h.scheming_field_required(field),
     extra_html=help_text()
