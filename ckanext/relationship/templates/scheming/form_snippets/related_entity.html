@@ -4,9 +4,6 @@
 {% endmacro %}
 
 {% set selected = h.relationship_get_current_relations_list(field, data) %}
-{% if not selected %}
-    {% set selected = data[field.field_name] %}
-{% endif %}
 
 {% set classes = ['control-full'] %}
 {% if field.hidden_from_form %}
