@@ -44,7 +44,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
         return _update_relations(pkg_dict)
 
     def after_update(self, context, pkg_dict):
-        return _update_relations(pkg_dict)
+        return _update_relations(context, pkg_dict)
 
     def before_index(self, pkg_dict):
         pkg_id = pkg_dict['id']
@@ -72,18 +72,18 @@ def _get_relations_info(schema):
             for field in schema['dataset_fields'] if 'relationship_related_entity' in field.get('validators', '')]
 
 
-def _update_relations(pkg_dict):
+def _update_relations(context, pkg_dict):
     subject_id = pkg_dict['id']
     add_relations = pkg_dict.get('add_relations', [])
     del_relations = pkg_dict.get('del_relations', [])
     for object_id, relation_type in add_relations + del_relations:
         if (object_id, relation_type) in add_relations:
-            tk.get_action('relationship_relation_create')({}, {'subject_id': subject_id,
+            tk.get_action('relationship_relation_create')(context, {'subject_id': subject_id,
                                                                'object_id': object_id,
                                                                'relation_type': relation_type
                                                                })
         else:
-            tk.get_action('relationship_relation_delete')({}, {'subject_id': subject_id,
+            tk.get_action('relationship_relation_delete')(context, {'subject_id': subject_id,
                                                                'object_id': object_id,
                                                                'relation_type': relation_type
                                                                })
