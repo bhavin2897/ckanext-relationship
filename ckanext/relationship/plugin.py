@@ -41,7 +41,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
     # IPackageController
     def after_create(self, context, pkg_dict):
-        return _update_relations(pkg_dict)
+        return _update_relations(context, pkg_dict)
 
     def after_update(self, context, pkg_dict):
         return _update_relations(context, pkg_dict)
