@@ -89,7 +89,7 @@ def _update_relations(context, pkg_dict):
                                                                })
         
         try:
-            tk.get_action('package_show')({}, {'id': object_id})
+            tk.get_action('package_show')({context}, {'id': object_id})
             rebuild(object_id)
         except NotFound:
             pass
