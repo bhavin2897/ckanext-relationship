@@ -41,9 +41,13 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
     # IPackageController
     def after_create(self, context, pkg_dict):
+        context = context.copy()
+        context.pop("__auth_audit", None)
         return _update_relations(context, pkg_dict)
 
     def after_update(self, context, pkg_dict):
+        context = context.copy()
+        context.pop("__auth_audit", None)
         return _update_relations(context, pkg_dict)
 
     def before_index(self, pkg_dict):
@@ -87,7 +91,7 @@ def _update_relations(context, pkg_dict):
                                                                'object_id': object_id,
                                                                'relation_type': relation_type
                                                                })
-        
+
         try:
             tk.get_action('package_show')(context, {'id': object_id})
             rebuild(object_id)
