@@ -4,6 +4,7 @@ import ckanext.relationship.helpers as helpers
 import ckanext.relationship.logic.action as action
 import ckanext.relationship.logic.auth as auth
 import ckanext.relationship.logic.validators as validators
+import ckanext.relationship.utils as utils
 import ckanext.scheming.helpers as sch
 from ckan.lib.search import rebuild
 from ckan.logic import NotFound
@@ -56,24 +57,33 @@ class RelationshipPlugin(plugins.SingletonPlugin):
         schema = sch.scheming_get_schema('dataset', pkg_type)
         if not schema:
             return pkg_dict
-        relations_info = _get_relations_info(schema)
+        relations_info = utils.get_relations_info(pkg_type)
         for related_entity, related_entity_type, relation_type in relations_info:
-            relations_list = tk.get_action('relationship_relations_list')({}, {'subject_id': pkg_id,
-                                                                               'object_entity': related_entity,
-                                                                               'object_type': related_entity_type,
-                                                                               'relation_type': relation_type})
-            if not relations_list:
-                continue
+            relations_ids = tk.get_action('relationship_relations_ids_list')({}, {'subject_id': pkg_id,
+                                                                                  'object_entity': related_entity,
+                                                                                  'object_type': related_entity_type,
+                                                                                  'relation_type': relation_type})
 
-            relations_ids = [rel['object_id'] for rel in relations_list]
-            pkg_dict[f'vocab_{relation_type}_{related_entity_type}s'] = relations_ids
+            if not relations_ids:
+                continue
+            field = utils.get_relation_field(pkg_type, related_entity, related_entity_type, relation_type)
+            pkg_dict[f'vocab_{field["field_name"]}'] = relations_ids
+
+            del pkg_dict[field["field_name"]]
 
         return pkg_dict
 
-
-def _get_relations_info(schema):
-    return [(field['related_entity'], field['related_entity_type'], field['relation_type'])
-            for field in schema['dataset_fields'] if 'relationship_related_entity' in field.get('validators', '')]
+    def after_show(self, context, pkg_dict):
+        pkg_id = pkg_dict['id']
+        pkg_type = pkg_dict['type']
+        relations_info = utils.get_relations_info(pkg_type)
+        for related_entity, related_entity_type, relation_type in relations_info:
+            field = utils.get_relation_field(pkg_type, related_entity, related_entity_type, relation_type)
+            pkg_dict[field['field_name']] = \
+                tk.get_action('relationship_relations_ids_list')(context, {'subject_id': pkg_id,
+                                                                           'object_entity': related_entity,
+                                                                           'object_type': related_entity_type,
+                                                                           'relation_type': relation_type})
 
 
 def _update_relations(context, pkg_dict):
@@ -83,14 +93,12 @@ def _update_relations(context, pkg_dict):
     for object_id, relation_type in add_relations + del_relations:
         if (object_id, relation_type) in add_relations:
             tk.get_action('relationship_relation_create')(context, {'subject_id': subject_id,
-                                                               'object_id': object_id,
-                                                               'relation_type': relation_type
-                                                               })
+                                                                    'object_id': object_id,
+                                                                    'relation_type': relation_type})
         else:
             tk.get_action('relationship_relation_delete')(context, {'subject_id': subject_id,
-                                                               'object_id': object_id,
-                                                               'relation_type': relation_type
-                                                               })
+                                                                    'object_id': object_id,
+                                                                    'relation_type': relation_type})
 
         try:
             tk.get_action('package_show')(context, {'id': object_id})

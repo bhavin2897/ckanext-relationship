@@ -1,8 +1,7 @@
-import ckan.model as model
 import ckan.logic as logic
-from ckan.model import core
+import ckan.model as model
 from ckan.model.types import make_uuid
-from sqlalchemy import Column, Text, or_, and_
+from sqlalchemy import Column, Text
 
 from .base import Base
 
@@ -14,10 +13,11 @@ class Relationship(Base):
     object_id: str = Column(Text, nullable=False)
     relation_type: str = Column(Text, nullable=False)
 
-    reverse_reletion_type = {'related_to': 'related_to',
-                             'child_of': 'parent_of',
-                             'parent_of': 'child_of'
-                             }
+    reverse_relation_type = {
+        'related_to': 'related_to',
+        'child_of': 'parent_of',
+        'parent_of': 'child_of'
+    }
 
     def __repr__(self):
         return (

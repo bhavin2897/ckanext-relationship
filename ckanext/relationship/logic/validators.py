@@ -1,20 +1,13 @@
+from __future__ import annotations
+
 import json
 
 import ckan.plugins.toolkit as tk
-import six
 from ckanext.scheming.validation import scheming_validator, scheming_multiple_choice_output
+from ckanext.toolbelt.decorators import Collector
 from ckantoolkit import missing
 
-_validators = {}
-
-
-def validator(func):
-    func.__name__ = f'relationship_{func.__name__}'
-    _validators[func.__name__] = func
-
-
-def get_validators():
-    return _validators.copy()
+validator, get_validators = Collector("relationship").split()
 
 
 @validator

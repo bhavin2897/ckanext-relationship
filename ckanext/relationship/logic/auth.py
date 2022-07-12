@@ -1,21 +1,18 @@
+from __future__ import annotations
+
 from ckan.plugins import toolkit as tk
+from ckanext.toolbelt.decorators import Collector
 
-
-_auth = {}
-
-
-def auth(func):
-    func.__name__ = f'relationship_{func.__name__}'
-    _auth[func.__name__] = func
-    return func
-
-
-def get_auth_functions():
-    return _auth.copy()
+auth, get_auth_functions = Collector("relationship").split()
 
 
 @auth
 def relation_create(context, data_dict):
+    return {'success': True}
+
+
+@auth
+def relation_delete(context, data_dict):
     return {'success': True}
 
 
@@ -26,8 +23,10 @@ def relations_list(context, data_dict):
 
 
 @auth
-def relation_delete(context, data_dict):
+@tk.auth_allow_anonymous_access
+def relations_ids_list(context, data_dict):
     return {'success': True}
+
 
 @auth
 @tk.auth_allow_anonymous_access
