@@ -51,7 +51,7 @@ def relation_delete(context, data_dict) -> list[dict[str, str]]:
                 .filter(Relationship.subject_id == data_dict['subject_id'],
                         Relationship.object_id == data_dict['object_id'],
                         Relationship.relation_type == data_dict.get('relation_type'))
-                .one_or_none()
+                .all()
                 )
 
     if not relation:
@@ -62,14 +62,14 @@ def relation_delete(context, data_dict) -> list[dict[str, str]]:
                                 Relationship.object_id == data_dict['subject_id'],
                                 Relationship.relation_type == Relationship.reverse_relation_type[
                                     data_dict.get('relation_type')])
-                        .one_or_none()
+                        .all()
                         )
 
-    context['session'].delete(relation)
-    context['session'].delete(reverse_relation)
+    [context['session'].delete(rel) for rel in relation]
+    [context['session'].delete(rel) for rel in reverse_relation]
     context['session'].commit()
 
-    return [rel.as_dict() for rel in (relation, reverse_relation)]
+    return [rel[0].as_dict() for rel in (relation, reverse_relation) if len(rel) > 0]
 
 
 @action
