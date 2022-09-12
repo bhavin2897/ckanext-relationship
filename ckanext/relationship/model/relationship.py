@@ -1,7 +1,7 @@
 import ckan.logic as logic
 import ckan.model as model
 from ckan.model.types import make_uuid
-from sqlalchemy import Column, Text
+from sqlalchemy import Column, Text, or_
 
 from .base import Base
 
@@ -52,7 +52,18 @@ class Relationship(Base):
         object_class = logic.model_name_to_class(model, object_entity)
 
         return model.Session.query(cls). \
-            filter(cls.subject_id == subject_id). \
+            filter(or_(cls.subject_id == subject_id,
+                       cls.subject_id == _pkg_name_by_id(subject_id))). \
             filter(object_class.id == cls.object_id). \
             filter(object_class.type == object_type). \
-            filter(cls.relation_type == relation_type).all()
+            filter(cls.relation_type == relation_type).distinct().all()
+
+
+def _pkg_name_by_id(pkg_id):
+    """
+    Returns pkg name by its id
+    """
+
+    pkg = model.Session.query(model.Package).filter(model.Package.id == pkg_id).one_or_none()
+    if pkg:
+        return pkg.name

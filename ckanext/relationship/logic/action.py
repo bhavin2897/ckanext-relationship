@@ -103,7 +103,7 @@ def relations_ids_list(context, data_dict) -> list[str]:
 
     rel_list = relations_list(context, data_dict)
 
-    return [rel["object_id"] for rel in rel_list]
+    return list(set([rel["object_id"] for rel in rel_list]))
 
 
 @action
