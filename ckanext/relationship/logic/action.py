@@ -5,7 +5,9 @@ import ckan.plugins.toolkit as tk
 import ckanext.relationship.logic.schema as schema
 from ckan.logic import validate
 from ckanext.relationship.model.relationship import Relationship
+from ckanext.relationship.utils import pkg_name_by_id
 from ckanext.toolbelt.decorators import Collector
+from sqlalchemy import or_
 
 NotFound = logic.NotFound
 
@@ -23,15 +25,20 @@ def relation_create(context, data_dict) -> list[dict[str, str]]:
     object_id = data_dict['object_id']
     relation_type = data_dict.get('relation_type')
 
-    relation = Relationship(subject_id=subject_id,
-                            object_id=object_id,
-                            relation_type=relation_type
-                            )
+    if Relationship.by_object_id(subject_id, object_id, relation_type):
+        return
 
-    reverse_relation = Relationship(subject_id=object_id,
-                                    object_id=subject_id,
-                                    relation_type=Relationship.reverse_relation_type[relation_type]
-                                    )
+    relation = Relationship(
+        subject_id=subject_id,
+        object_id=object_id,
+        relation_type=relation_type
+    )
+
+    reverse_relation = Relationship(
+        subject_id=object_id,
+        object_id=subject_id,
+        relation_type=Relationship.reverse_relation_type[relation_type]
+    )
 
     context['session'].add(relation)
     context['session'].add(reverse_relation)
@@ -47,28 +54,36 @@ def relation_delete(context, data_dict) -> list[dict[str, str]]:
     by ids (subject_id, object_id). Also delete reverse relation."""
     tk.check_access('relationship_relation_delete', context, data_dict)
 
-    relation = (context['session'].query(Relationship)
-                .filter(Relationship.subject_id == data_dict['subject_id'],
-                        Relationship.object_id == data_dict['object_id'],
-                        Relationship.relation_type == data_dict.get('relation_type'))
-                .all()
-                )
+    subject_id = data_dict['subject_id']
+    subject_name = pkg_name_by_id(data_dict['subject_id'])
+    object_id = data_dict['object_id']
+    object_name = pkg_name_by_id(data_dict['object_id'])
+    relation_type = data_dict.get('relation_type')
 
-    if not relation:
-        raise tk.ObjectNotFound('Relation not found')
+    relation = (
+        context['session'].query(Relationship)
+        .filter(or_(Relationship.subject_id == subject_id,
+                    Relationship.subject_id == subject_name),
+                or_(Relationship.object_id == object_id,
+                    Relationship.object_id == object_name),
+                Relationship.relation_type == relation_type)
+        .all()
+    )
 
-    reverse_relation = (context['session'].query(Relationship)
-                        .filter(Relationship.subject_id == data_dict['object_id'],
-                                Relationship.object_id == data_dict['subject_id'],
-                                Relationship.relation_type == Relationship.reverse_relation_type[
-                                    data_dict.get('relation_type')])
-                        .all()
-                        )
+    reverse_relation = (
+        context['session'].query(Relationship)
+        .filter(or_(Relationship.subject_id == object_id,
+                    Relationship.subject_id == object_name),
+                or_(Relationship.object_id == subject_id,
+                    Relationship.object_id == subject_name),
+                Relationship.relation_type == Relationship.reverse_relation_type[
+                    relation_type])
+        .all()
+    )
 
     [context['session'].delete(rel) for rel in relation]
     [context['session'].delete(rel) for rel in reverse_relation]
     context['session'].commit()
-
     return [rel[0].as_dict() for rel in (relation, reverse_relation) if len(rel) > 0]
 
 

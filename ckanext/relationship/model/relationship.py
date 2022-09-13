@@ -42,19 +42,26 @@ class Relationship(Base):
 
     @classmethod
     def by_object_id(cls, subject_id, object_id, relation_type):
+        subject_name = _pkg_name_by_id(subject_id)
+        object_name = _pkg_name_by_id(object_id)
+
         return model.Session.query(cls). \
-            filter(cls.subject_id == subject_id). \
-            filter(cls.object_id == object_id). \
+            filter(or_(cls.subject_id == subject_id,
+                       cls.subject_id == subject_name)). \
+            filter(or_(cls.object_id == object_id,
+                       cls.object_id == object_name)). \
             filter(cls.relation_type == relation_type).one_or_none()
 
     @classmethod
     def by_object_type(cls, subject_id, object_entity, object_type, relation_type):
         object_class = logic.model_name_to_class(model, object_entity)
+        subject_name = _pkg_name_by_id(subject_id)
 
         return model.Session.query(cls). \
             filter(or_(cls.subject_id == subject_id,
-                       cls.subject_id == _pkg_name_by_id(subject_id))). \
-            filter(object_class.id == cls.object_id). \
+                       cls.subject_id == subject_name)). \
+            filter(or_(object_class.id == cls.object_id,
+                       object_class.name == cls.object_id)). \
             filter(object_class.type == object_type). \
             filter(cls.relation_type == relation_type).distinct().all()
 

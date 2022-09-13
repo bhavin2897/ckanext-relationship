@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import ckan.model as model
+import ckan.plugins.toolkit as tk
 import ckanext.scheming.helpers as sch
 
 
@@ -17,7 +19,7 @@ def get_relations_info(pkg_type: str) -> list[tuple[str, str, str]]:
             for field in schema['dataset_fields'] if 'relationship_related_entity' in field.get('validators', '')]
 
 
-def get_relation_field(pkg_type: str, object_entity: str, object_entity_type: str, relation_type: str)\
+def get_relation_field(pkg_type: str, object_entity: str, object_entity_type: str, relation_type: str) \
         -> dict[str, str]:
     """Return field dict for specified package type (pkg_type) describes relation with specified entity
     (object_entity, object_entity_type) and type of relation (relation_type)."""
@@ -32,3 +34,13 @@ def get_relation_field(pkg_type: str, object_entity: str, object_entity_type: st
         ):
             return field
     return {}
+
+
+def pkg_name_by_id(pkg_id):
+    """
+    Returns pkg name by its id
+    """
+
+    pkg = tk.get_action("package_show")({"ignore_auth": True}, {"id": pkg_id})
+    if pkg:
+        return pkg.get("name")

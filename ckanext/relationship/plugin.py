@@ -90,7 +90,7 @@ def _update_relations(context, pkg_dict):
     subject_id = pkg_dict['id']
     add_relations = pkg_dict.get('add_relations', [])
     del_relations = pkg_dict.get('del_relations', [])
-    for object_id, relation_type in add_relations + del_relations:
+    for object_id, relation_type in del_relations + add_relations:
         if (object_id, relation_type) in add_relations:
             tk.get_action('relationship_relation_create')(context, {'subject_id': subject_id,
                                                                     'object_id': object_id,
@@ -101,7 +101,6 @@ def _update_relations(context, pkg_dict):
                                                                     'relation_type': relation_type})
 
         try:
-            tk.get_action('package_show')(context, {'id': object_id})
             rebuild(object_id)
         except NotFound:
             pass
