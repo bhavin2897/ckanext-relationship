@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import ckan.model as model
 import ckan.plugins.toolkit as tk
 import ckanext.scheming.helpers as sch
+from ckan.logic import NotFound
 
 
 def get_relations_info(pkg_type: str) -> list[tuple[str, str, str]]:
@@ -36,11 +36,29 @@ def get_relation_field(pkg_type: str, object_entity: str, object_entity_type: st
     return {}
 
 
-def pkg_name_by_id(pkg_id):
+def entity_name_by_id(entity_id):
     """
     Returns pkg name by its id
     """
 
-    pkg = tk.get_action("package_show")({"ignore_auth": True}, {"id": pkg_id})
-    if pkg:
-        return pkg.get("name")
+    try:
+        pkg = tk.get_action("package_show")({"ignore_auth": True}, {"id": entity_id})
+        if pkg:
+            return pkg.get("name")
+    except NotFound:
+        pass
+
+    try:
+        org = tk.get_action("organization_show")({"ignore_auth": True}, {"id": entity_id})
+        if org:
+            return org.get("name")
+    except NotFound:
+        pass
+
+    try:
+        group = tk.get_action("group_show")({"ignore_auth": True}, {"id": entity_id})
+        if group:
+            return group.get("name")
+    except NotFound:
+        pass
+

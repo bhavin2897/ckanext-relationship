@@ -5,7 +5,7 @@ import ckan.plugins.toolkit as tk
 import ckanext.relationship.logic.schema as schema
 from ckan.logic import validate
 from ckanext.relationship.model.relationship import Relationship
-from ckanext.relationship.utils import pkg_name_by_id
+from ckanext.relationship.utils import entity_name_by_id
 from ckanext.toolbelt.decorators import Collector
 from sqlalchemy import or_
 
@@ -55,31 +55,35 @@ def relation_delete(context, data_dict) -> list[dict[str, str]]:
     tk.check_access('relationship_relation_delete', context, data_dict)
 
     subject_id = data_dict['subject_id']
-    subject_name = pkg_name_by_id(data_dict['subject_id'])
+    subject_name = entity_name_by_id(data_dict['subject_id'])
     object_id = data_dict['object_id']
-    object_name = pkg_name_by_id(data_dict['object_id'])
+    object_name = entity_name_by_id(data_dict['object_id'])
     relation_type = data_dict.get('relation_type')
 
-    relation = (
-        context['session'].query(Relationship)
+    relation = context['session'].query(Relationship) \
         .filter(or_(Relationship.subject_id == subject_id,
                     Relationship.subject_id == subject_name),
                 or_(Relationship.object_id == object_id,
-                    Relationship.object_id == object_name),
-                Relationship.relation_type == relation_type)
-        .all()
-    )
+                    Relationship.object_id == object_name)
+                )
 
-    reverse_relation = (
-        context['session'].query(Relationship)
+    if relation_type:
+        relation = relation.filter(Relationship.relation_type == relation_type)
+
+    relation = relation.all()
+
+    reverse_relation = context['session'].query(Relationship) \
         .filter(or_(Relationship.subject_id == object_id,
                     Relationship.subject_id == object_name),
                 or_(Relationship.object_id == subject_id,
                     Relationship.object_id == subject_name),
-                Relationship.relation_type == Relationship.reverse_relation_type[
-                    relation_type])
-        .all()
-    )
+                )
+
+    if relation_type:
+        reverse_relation = reverse_relation.filter(Relationship.relation_type ==
+                                                   Relationship.reverse_relation_type[relation_type])
+
+    reverse_relation = reverse_relation.all()
 
     [context['session'].delete(rel) for rel in relation]
     [context['session'].delete(rel) for rel in reverse_relation]
@@ -95,15 +99,15 @@ def relations_list(context, data_dict) -> list[dict[str, str]]:
     tk.check_access('relationship_relations_list', context, data_dict)
 
     subject_id = data_dict['subject_id']
-    object_entity = data_dict['object_entity']
-    object_entity = object_entity if object_entity != 'organization' else 'group'
-    object_type = data_dict['object_type']
+    object_entity = data_dict.get('object_entity')
+    object_entity = 'group' if object_entity and object_entity == 'organization' else object_entity
+    object_type = data_dict.get('object_type')
     relation_type = data_dict.get('relation_type')
 
-    relations = Relationship.by_object_type(subject_id,
-                                            object_entity,
-                                            object_type,
-                                            relation_type)
+    relations = Relationship.by_subject_id(subject_id,
+                                           object_entity,
+                                           object_type,
+                                           relation_type)
     if not relations:
         return []
     return [rel.as_dict() for rel in relations]

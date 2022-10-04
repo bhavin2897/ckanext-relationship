@@ -42,8 +42,8 @@ class Relationship(Base):
 
     @classmethod
     def by_object_id(cls, subject_id, object_id, relation_type):
-        subject_name = _pkg_name_by_id(subject_id)
-        object_name = _pkg_name_by_id(object_id)
+        subject_name = _entity_name_by_id(subject_id)
+        object_name = _entity_name_by_id(object_id)
 
         return model.Session.query(cls). \
             filter(or_(cls.subject_id == subject_id,
@@ -53,24 +53,34 @@ class Relationship(Base):
             filter(cls.relation_type == relation_type).one_or_none()
 
     @classmethod
-    def by_object_type(cls, subject_id, object_entity, object_type, relation_type):
-        object_class = logic.model_name_to_class(model, object_entity)
-        subject_name = _pkg_name_by_id(subject_id)
+    def by_subject_id(cls, subject_id, object_entity, object_type=None, relation_type=None):
+        subject_name = _entity_name_by_id(subject_id)
 
-        return model.Session.query(cls). \
-            filter(or_(cls.subject_id == subject_id,
-                       cls.subject_id == subject_name)). \
-            filter(or_(object_class.id == cls.object_id,
-                       object_class.name == cls.object_id)). \
-            filter(object_class.type == object_type). \
-            filter(cls.relation_type == relation_type).distinct().all()
+        q = model.Session.query(cls).filter(or_(cls.subject_id == subject_id,
+                                                cls.subject_id == subject_name))
+
+        if object_entity:
+            object_class = logic.model_name_to_class(model, object_entity)
+            q = q.filter(or_(object_class.id == cls.object_id,
+                             object_class.name == cls.object_id))
+
+            if object_type:
+                q = q.filter(object_class.type == object_type)
+
+        if relation_type:
+            q = q.filter(cls.relation_type == relation_type)
+
+        return q.distinct().all()
 
 
-def _pkg_name_by_id(pkg_id):
+def _entity_name_by_id(entity_id):
     """
-    Returns pkg name by its id
+    Returns entity (package or organization or group) name by its id
     """
 
-    pkg = model.Session.query(model.Package).filter(model.Package.id == pkg_id).one_or_none()
+    pkg = model.Session.query(model.Package).filter(model.Package.id == entity_id).one_or_none()
     if pkg:
         return pkg.name
+    group = model.Session.query(model.Group).filter(model.Group.id == entity_id).one_or_none()
+    if pkg:
+        return group.name

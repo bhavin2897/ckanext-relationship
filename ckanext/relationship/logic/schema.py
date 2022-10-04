@@ -26,6 +26,7 @@ def relation_delete(not_empty, one_of, ignore_missing):
             not_empty,
         ],
         'relation_type': [
+            ignore_missing,
             one_of(['related_to', 'child_of', 'parent_of']),
         ],
     }
@@ -38,14 +39,14 @@ def relations_list(not_empty, one_of, ignore_missing):
             not_empty,
         ],
         'object_entity': [
-            not_empty,
+            ignore_missing,
             one_of(['package', 'organization', 'group']),
         ],
         'object_type': [
-            not_empty,
+            ignore_missing,
         ],
         'relation_type': [
-            not_empty,
+            ignore_missing,
             one_of(['related_to', 'child_of', 'parent_of']),
         ],
     }
@@ -58,14 +59,14 @@ def relations_ids_list(not_empty, one_of, ignore_missing):
             not_empty,
         ],
         'object_entity': [
-            not_empty,
+            ignore_missing,
             one_of(['package', 'organization', 'group']),
         ],
         'object_type': [
-            not_empty,
+            ignore_missing,
         ],
         'relation_type': [
-            not_empty,
+            ignore_missing,
             one_of(['related_to', 'child_of', 'parent_of']),
         ],
     }

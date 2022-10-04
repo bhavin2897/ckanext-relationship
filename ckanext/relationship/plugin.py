@@ -51,6 +51,23 @@ class RelationshipPlugin(plugins.SingletonPlugin):
         context.pop("__auth_audit", None)
         return _update_relations(context, pkg_dict)
 
+    def after_delete(self, context, pkg_dict):
+        context = context.copy()
+        context.pop("__auth_audit", None)
+
+        subject_id = pkg_dict["id"]
+
+        relations_ids_list = tk.get_action('relationship_relations_ids_list')(context, {'subject_id': subject_id})
+
+        for object_id in relations_ids_list:
+            tk.get_action('relationship_relation_delete')(context, {'subject_id': subject_id, 'object_id': object_id})
+
+            try:
+                rebuild(object_id)
+            except NotFound:
+                pass
+        rebuild(subject_id)
+
     def before_index(self, pkg_dict):
         pkg_id = pkg_dict['id']
         pkg_type = pkg_dict['type']
