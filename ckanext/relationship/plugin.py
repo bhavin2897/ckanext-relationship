@@ -107,6 +107,8 @@ def _update_relations(context, pkg_dict):
     subject_id = pkg_dict['id']
     add_relations = pkg_dict.get('add_relations', [])
     del_relations = pkg_dict.get('del_relations', [])
+    if not add_relations and not del_relations:
+        return pkg_dict
     for object_id, relation_type in del_relations + add_relations:
         if (object_id, relation_type) in add_relations:
             tk.get_action('relationship_relation_create')(context, {'subject_id': subject_id,
