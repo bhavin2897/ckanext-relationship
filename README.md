@@ -7,11 +7,6 @@ different types of packages, organizations and groups.
 
 ## Requirements
 
-**TODO:** For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-If your extension works across different versions you can add the following table:
-
 Compatibility with core CKAN versions:
 
 | CKAN version    | Compatible?   |
@@ -19,7 +14,7 @@ Compatibility with core CKAN versions:
 | 2.6 and earlier | not tested    |
 | 2.7             | not tested    |
 | 2.8             | not tested    |
-| 2.9             | not tested    |
+| 2.9             | yes           |
 
 Suggested values:
 
@@ -30,10 +25,6 @@ Suggested values:
 
 
 ## Installation
-
-**TODO:** Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
 
 To install ckanext-relationship:
 
@@ -63,9 +54,21 @@ None at present
 
 **TODO:** Document any optional config settings here. For example:
 
-	# The minimum number of hours to wait before re-checking a resource
-	# (optional, default: 24).
-	ckanext.relationship.some_setting = some_default_value
+	# Set a limit of relationships for a dataset
+	# (optional, default: 5).
+	ckanext.relationship.max_relationship_number = 10
+
+
+## Validators
+
+A list of validators you could use in your schema:
+    1. relationship_restrict_max_relationships
+    The validator will restrict the amount of dataset that could be saved as
+    a relationship. The default value is 5, but could be altered with a
+    ckanext.relationship.max_relationship_number config option.
+
+    0 (zero) means no limit.
+
 
 
 ## Developer installation
