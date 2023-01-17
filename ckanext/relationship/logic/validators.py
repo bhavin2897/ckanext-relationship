@@ -2,15 +2,10 @@ from __future__ import annotations
 
 import json
 
-from ckantoolkit import missing
-
 import ckan.plugins.toolkit as tk
-
 from ckanext.scheming.validation import scheming_validator, scheming_multiple_choice_output
 from ckanext.toolbelt.decorators import Collector
-
-from ckanext.relationship.config import get_max_relationship_number
-
+from ckantoolkit import missing
 
 validator, get_validators = Collector("relationship").split()
 
@@ -65,24 +60,3 @@ def _get_selected_relations(selected):
     else:
         selected_relations = []
     return set(selected_relations)
-
-
-@validator
-def restrict_max_relationships(key, data, errors, context):
-    """Restrict max amount of relationships for a dataset"""
-
-    list_of_ids: list[str] = data[key]
-
-    if list_of_ids is missing:
-        return
-
-    limit: int = get_max_relationship_number()
-
-    if not limit:
-        return
-
-    if len(list_of_ids) > limit:
-        errors[key].append(
-            tk._(f"The number of relationships for a dataset is limited to {limit}")
-        )
-        raise tk.StopOnError
