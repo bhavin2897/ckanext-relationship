@@ -13,8 +13,8 @@ relationships = Blueprint("relationships", __name__)
 
 @relationships.route("/api/util/relationships/autocomplete")
 def relationships_autocomplete():
-    entity_type = "report"
     incomplete = tk.request.args.get("incomplete", "")
+    entity_type = tk.request.args.get("entity_type", "dataset")
     result = []
     if incomplete:
         packages = tk.get_action('package_search')({}, {
