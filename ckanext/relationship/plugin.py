@@ -1,6 +1,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckanext.relationship.helpers as helpers
+import ckanext.relationship.views as views
 import ckanext.relationship.logic.action as action
 import ckanext.relationship.logic.auth as auth
 import ckanext.relationship.logic.validators as validators
@@ -16,13 +17,14 @@ class RelationshipPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IBlueprint)
     plugins.implements(plugins.IPackageController, inherit=True)
 
     # IConfigurer
     def update_config(self, config_):
         tk.add_template_directory(config_, 'templates')
         tk.add_public_directory(config_, 'public')
-        tk.add_resource('fanstatic', 'relationship')
+        tk.add_resource('assets', 'relationship')
 
     # IActions
     def get_actions(self):
@@ -39,6 +41,10 @@ class RelationshipPlugin(plugins.SingletonPlugin):
     # ITemplateHelpers
     def get_helpers(self):
         return helpers.get_helpers()
+
+    # IBlueprint
+    def get_blueprint(self):
+        return views.get_blueprints()
 
     # IPackageController
     def after_create(self, context, pkg_dict):

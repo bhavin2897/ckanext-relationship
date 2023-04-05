@@ -6,6 +6,7 @@ import ckan.plugins.toolkit as tk
 from ckanext.scheming.validation import scheming_validator, scheming_multiple_choice_output
 from ckanext.toolbelt.decorators import Collector
 from ckantoolkit import missing
+from six import string_types
 
 validator, get_validators = Collector("relationship").split()
 
@@ -52,10 +53,13 @@ def _get_current_relations(entity_id, related_entity, related_entity_type, relat
     return set(current_relations)
 
 
-def _get_selected_relations(selected):
-    selected_relations = selected
+def _get_selected_relations(selected_relations):
+
+    if isinstance(selected_relations, string_types) and "," in selected_relations:
+        selected_relations = selected_relations.split(",")
+
     if selected_relations is not missing:
-        selected_relations = scheming_multiple_choice_output(selected)
+        selected_relations = scheming_multiple_choice_output(selected_relations)
         selected_relations = [] if selected_relations == [''] else selected_relations
     else:
         selected_relations = []
