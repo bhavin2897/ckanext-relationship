@@ -3,6 +3,8 @@
 ### forked from [DataShades/ckanext-relationship](https://github.com/DataShades/ckanext-relationship)
 #### Version Tag from forked v0.1.8
 
+Forked and changes made as per the requirements for NFDI4Chem project 
+
 # ckanext-relationship
 
 The extension adds an additional table to the database that stores relationships between entities in the form of triples (subject_id, object_id, relation_type). The relation_type parameter sets the type of relationship: peer-to-peer (related_to <=> related_to) and subordinate (child_of <=> parent_of). Adding, deleting and getting a list of relationships between entities is carried out using actions (relation_create, relation_delete, relations_list). The description of the types of relationships between entities is carried out in the entity schema in the form:
@@ -27,10 +29,10 @@ Multiple - toggle the ability to add multiple related entities.
 
 Updatable_only - toggle the ability to add only entities that can be updated by the current user.
 
+
 ## Requirements
 
-**TODO:** For example, you might want to mention here which versions of CKAN this
-extension works with.
+This plugin is an extension of [ckanext-scheming](https://github.com/ckan/ckanext-scheming), to initiate additional schema features to add related datasets or other hierarchical entities  
 
 If your extension works across different versions you can add the following table:
 
@@ -80,13 +82,6 @@ This creates a new database table within CKAN, to store new field_name of relati
 ## Config settings
 
 None at present
-
-**TODO:** Document any optional config settings here. For example:
-
-	# The minimum number of hours to wait before re-checking a resource
-	# (optional, default: 24).
-	ckanext.relationship.some_setting = some_default_value
-
 
 ## Developer installation
 
