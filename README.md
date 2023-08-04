@@ -29,7 +29,8 @@ Multiple - toggle the ability to add multiple related entities.
 
 Updatable_only - toggle the ability to add only entities that can be updated by the current user.
 
-*Note*: These schema changes have to be added done on the ckanext-scheming yaml or json files. We do not add any YAML or JSON files here 
+***Note***: These schema changes have to be added done on the ckanext-scheming yaml or json files. We do not add any YAML or JSON files here 
+
 ## Requirements
 
 This plugin is an extension of [ckanext-scheming](https://github.com/ckan/ckanext-scheming), to initiate additional schema features to add related datasets or other hierarchical entities  
