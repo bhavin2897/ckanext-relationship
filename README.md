@@ -1,9 +1,32 @@
 [![Tests](https://github.com//ckanext-relationship/workflows/Tests/badge.svg?branch=main)](https://github.com//ckanext-relationship/actions)
 
+### forked from [DataShades/ckanext-relationship](https://github.com/DataShades/ckanext-relationship)
+####Version Tag from forked v0.1.8
+
 # ckanext-relationship
 
-This extension provides a way to create relations between
-different types of packages, organizations and groups.
+The extension adds an additional table to the database that stores relationships between entities in the form of triples (subject_id, object_id, relation_type). The relation_type parameter sets the type of relationship: peer-to-peer (related_to <=> related_to) and subordinate (child_of <=> parent_of). Adding, deleting and getting a list of relationships between entities is carried out using actions (relation_create, relation_delete, relations_list). The description of the types of relationships between entities is carried out in the entity schema in the form:
+```
+- field_name: related_projects
+  label: Related Projects
+  preset: related_entity
+  current_entity: package
+  current_entity_type: dataset
+  related_entity: package
+  related_entity_type: project
+  relation_type: related_to
+  multiple: true
+  updatable_only: false
+  required: false
+  
+```
+Entity (current_entity, related_entity) - one of three options: package, organization, group.
+
+Entity type (current_entity_type, related_entity_type) - entity customized using ckanext-scheming.
+
+Multiple - toggle the ability to add multiple related entities.
+
+Updatable_only - toggle the ability to add only entities that can be updated by the current user.
 
 ## Requirements
 
@@ -19,34 +42,25 @@ Compatibility with core CKAN versions:
 | 2.6 and earlier | not tested    |
 | 2.7             | not tested    |
 | 2.8             | not tested    |
-| 2.9             | not tested    |
-
-Suggested values:
-
-* "yes"
-* "not tested" - I can't think of a reason why it wouldn't work
-* "not yet" - there is an intention to get it working
-* "no"
+| 2.9             | yes    |
+|2.10  | no (please use latest version tag) |     
 
 
 ## Installation
-
-**TODO:** Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
 
 To install ckanext-relationship:
 
 1. Activate your CKAN virtual environment, for example:
 
-     . /usr/lib/ckan/default/bin/activate
+    ``` . /usr/lib/ckan/default/bin/activate ```
 
 2. Clone the source and install it on the virtualenv
-
+```
     git clone https://github.com//ckanext-relationship.git
     cd ckanext-relationship
     pip install -e .
-	pip install -r requirements.txt
+    pip install -r requirements.txt
+```
 
 3. Add `relationship` to the `ckan.plugins` setting in your CKAN
    config file (by default the config file is located at
@@ -54,7 +68,14 @@ To install ckanext-relationship:
 
 4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
 
-     sudo service apache2 reload
+```     sudo service apache2 reload ``` 
+
+
+5. To Migrate database tables
+```
+ckan -c /etc/ckan/default/ckan.ini db upgrade -p relationship
+```
+This creates a new database table within CKAN, to store new field_name of relation_entity and their types. 
 
 
 ## Config settings

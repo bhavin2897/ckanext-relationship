@@ -1,7 +1,6 @@
 {% set selected_ids = h.relationship_get_current_relations_list(field, data) %}
 
 {% set selected = [] %}
-
 {% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
   {% for selected_id in selected_ids %}
     {% if entity['id'] == selected_id %}
@@ -13,6 +12,9 @@
 {% set selected = selected|sort(case_sensitive=false, attribute=1) %}
 
 {% for name, title in selected %}
-  <a href="{{ h.url_for(field.related_entity_type + ".read", id=name, _external=True) }}">{{ title }}</a>
-  <br>
+  <div class="card-block" >
+    <li><a href="{{ h.url_for(field.related_entity_type + ".read", id=name, _external=True) }}">{{ title }}</a> </li>
+  </div>
+<br>
 {% endfor %}
+
