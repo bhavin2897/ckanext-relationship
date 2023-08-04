@@ -60,7 +60,8 @@ def get_selected_json(selected_ids: list = []) -> str:
             selected_pkgs.append(
                 {
                     "name": pkg_dict["id"],
-                    "title": pkg_dict["title"]
+                    "title": pkg_dict["title"],
+                    "description": pkg_dict["notes"]
                 }
             )
         except:
