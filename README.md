@@ -18,7 +18,6 @@ The extension adds an additional table to the database that stores relationships
   multiple: true
   updatable_only: false
   required: false
-  
 ```
 Entity (current_entity, related_entity) - one of three options: package, organization, group.
 
