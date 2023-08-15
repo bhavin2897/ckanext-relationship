@@ -1,3 +1,4 @@
+
 {% set selected_ids = h.relationship_get_current_relations_list(field, data) %}
 
 {% set selected = [] %}
@@ -13,17 +14,20 @@
 {% set selected = selected|sort(case_sensitive=false, attribute=1) %}
 
 {% if selected|length %}
-  <h2> {{ field.label }} </h2>
+
+
 
 {% for name, title, description in selected %}
-  <div class="dataset-item" >
+
     <li>
      <strong> <a href="{{ h.url_for(field.related_entity_type + ".read", id=name, _external=True) }}">{{ title }}</a> </strong> <br>
       {{ description }}
     </li>
     <br>
-  </div>
-
 {% endfor %}
 
 {% endif %}
+
+
+
+

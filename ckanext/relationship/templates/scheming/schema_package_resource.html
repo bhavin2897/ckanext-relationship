@@ -1,0 +1,51 @@
+<style>
+  .collapsible {
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: left;
+  }
+
+  .collapseDataset {
+    display: none;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+  }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!--<a class="btn btn-primary" data-toggle="collapse" id="{{idName}}" role="button" aria-expanded="false" aria-controls="collapseExample" style="width:100%;text-align:left;">-->
+<div id="{{field.field_name}}">
+<div class="btn-primary collapsible" role="button">
+  {{ field.label }} <span id="iconCollapse" class="down-icon" style="position:right">&#8964;</span>
+</div>
+
+<div class="collapseDataset" id="collapseDataset" >
+        {% snippet 'scheming/display_snippets/related_entity.html', field=field, data=data  %}
+</div>
+ <br>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+  $(".collapsible").click(function() {
+    var content = $(this).next(".collapseDataset");
+    var icon = $(this).find(".iconCollapse");
+
+   if (content.is(":hidden")) {
+     content.slideToggle();
+     icon.html("&#8963;");
+                   // Up arrow
+   }
+   else {
+     content.slideToggle();
+     icon.html("&#8964;"); // Down arrow
+   }
+
+  });
+});
+</script>
+
+
