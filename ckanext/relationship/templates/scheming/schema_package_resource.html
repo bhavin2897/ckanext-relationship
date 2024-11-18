@@ -13,19 +13,30 @@
     border-top: 1px solid #ddd;
   }
 </style>
+{% set datasets_count = data.related_dataset|length %}
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
 <!--<a class="btn btn-primary" data-toggle="collapse" id="{{idName}}" role="button" aria-expanded="false" aria-controls="collapseExample" style="width:100%;text-align:left;">-->
-<div id="{{field.field_name}}">
-<div class="btn-primary collapsible" role="button">
-  {{ field.label }} <span id="iconCollapse" class="down-icon" style="position:right">&#8964;</span>
-</div>
 
-<div class="collapseDataset" id="collapseDataset" >
-        {% snippet 'scheming/display_snippets/related_entity.html', field=field, data=data  %}
-</div>
- <br>
-</div>
+    <div id="{{field.field_name}}">
+    <div class="btn-primary collapsible" role="button">
+        {% if field.label == 'Related Dataset' %}
+            {{datasets_count}} {{ field.label }}{{ _('(s)') }}
+        {% else %}
+            {{ field.label }}
+        {% endif %}
+        <span id="iconCollapse" class="down-icon" style="position:right">&#8964;</span>
+    </div>
+
+    <div class="collapseDataset" id="collapseDataset" >
+            {% snippet 'scheming/display_snippets/related_entity.html', field=field, data=data  %}
+    </div>
+     <br>
+    </div>
+
+
+
 
 
 <script type="text/javascript">
