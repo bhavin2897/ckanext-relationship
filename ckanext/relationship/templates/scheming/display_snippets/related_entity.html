@@ -11,6 +11,7 @@
 
 
 {% set selected = selected|sort(case_sensitive=false, attribute=1) %}
+ <p>{{ selected }}</p>
 
 {% if selected|length %}
 {% for name, title, description in selected %}

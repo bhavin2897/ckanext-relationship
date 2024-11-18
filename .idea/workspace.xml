@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="collapse bar for related types with new html">
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="related-dataset not seen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,21 +35,21 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 3
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="1uwhdzxctORhaUc8XATasbn26iM" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "nfdi4chem"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;git-widget-placeholder&quot;: &quot;nfdi4chem&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -123,7 +123,39 @@
       <option name="project" value="LOCAL" />
       <updated>1692104642293</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="collapse bar with number of values">
+      <option name="closed" value="true" />
+      <created>1731940115272</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1731940115272</updated>
+    </task>
+    <task id="LOCAL-00010" summary="test with missing">
+      <option name="closed" value="true" />
+      <created>1731944393080</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1731944393080</updated>
+    </task>
+    <task id="LOCAL-00011" summary="test with missing">
+      <option name="closed" value="true" />
+      <created>1731945640912</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1731945640912</updated>
+    </task>
+    <task id="LOCAL-00012" summary="related-dataset not seen">
+      <option name="closed" value="true" />
+      <created>1731947115847</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1731947115847</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,6 +177,9 @@
     <MESSAGE value="Update README.md for NFDI4Chem" />
     <MESSAGE value="add description to related resources" />
     <MESSAGE value="collapse bar for related types with new html" />
-    <option name="LAST_COMMIT_MESSAGE" value="collapse bar for related types with new html" />
+    <MESSAGE value="collapse bar with number of values" />
+    <MESSAGE value="test with missing" />
+    <MESSAGE value="related-dataset not seen" />
+    <option name="LAST_COMMIT_MESSAGE" value="related-dataset not seen" />
   </component>
 </project>
