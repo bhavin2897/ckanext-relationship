@@ -13,8 +13,8 @@
 {% set selected = selected|sort(case_sensitive=false, attribute=1) %}
 
 {% if selected|length %}
-
 {% for name, title, description in selected %}
+ <p>{{ title }}</p>
 
     <li>
      <strong> <a href="{{ h.url_for(field.related_entity_type + ".read", id=name, _external=True) }}">{{ title }}</a> </strong> <br>
