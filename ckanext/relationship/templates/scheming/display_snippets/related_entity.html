@@ -1,6 +1,5 @@
 
 {% set selected_ids = h.relationship_get_current_relations_list(field, data) %}
-<p> {{ selected_ids }}</p>
 {% set selected = [] %}
 {% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
   {% for selected_id in selected_ids %}
@@ -10,17 +9,15 @@
   {% endfor %}
 {% endfor %}
 
-
 {% set selected = selected|sort(case_sensitive=false, attribute=1) %}
- <p>{{ selected }}</p>
+
 
 {% if selected|length %}
 {% for name, title, description in selected %}
- <p>{{ title }}</p>
 
     <li>
-     <strong> <a href="{{ h.url_for(field.related_entity_type + ".read", id=name, _external=True) }}">{{ title }}</a> </strong> <br>
-      {{ description }}
+     <strong> <a href="{{ h.url_for(field.related_entity_type + '.read', id=name, _external=True) }}">{{ title }} </a> </strong> <br>
+{#      {{ description }} #}
     </li>
     <br>
 {% endfor %}
