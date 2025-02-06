@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="related-dataset not seen" />
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="related-dataset update to view only title">
+      <change afterPath="$PROJECT_DIR$/ckanext/relationship/sample.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/helpers.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -45,13 +49,48 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;git-widget-placeholder&quot;: &quot;nfdi4chem&quot;
+    &quot;git-widget-placeholder&quot;: &quot;nfdi4chem&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/usr/lib/ckan/default/src/ckanext-relationship/ckanext/relationship/templates/snippets&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ckanext/relationship/templates/snippets" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="helpers" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ckanext-relationship" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/ckanext/relationship" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ckanext/relationship/helpers.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.helpers" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-d7ad00fb9fc3-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.23726.102" />
+        <option value="bundled-python-sdk-6a3326d57233-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.24807.21" />
       </set>
     </attachedChunks>
   </component>
@@ -169,7 +208,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731947598464</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="related-dataset not seen">
+      <option name="closed" value="true" />
+      <created>1731948145926</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1731948145926</updated>
+    </task>
+    <task id="LOCAL-00016" summary="related-dataset update to view only title">
+      <option name="closed" value="true" />
+      <created>1732715751996</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1732715751996</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,6 +249,7 @@
     <MESSAGE value="collapse bar with number of values" />
     <MESSAGE value="test with missing" />
     <MESSAGE value="related-dataset not seen" />
-    <option name="LAST_COMMIT_MESSAGE" value="related-dataset not seen" />
+    <MESSAGE value="related-dataset update to view only title" />
+    <option name="LAST_COMMIT_MESSAGE" value="related-dataset update to view only title" />
   </component>
 </project>
