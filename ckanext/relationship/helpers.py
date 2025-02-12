@@ -21,9 +21,11 @@ def get_entity_list(entity, entity_type, include_private=True):
                                                                 'rows': 1000,
                                                                 'include_private': include_private})
         entity_list = entity_list['results']
+
     else:
         entity_list = tk.get_action('relationship_get_entity_list')(context, {'entity': entity,
                                                                               'entity_type': entity_type})
+
 
         entity_list = [{'id': id, 'name': name, 'title': title} for id, name, title in entity_list]
     return entity_list
@@ -54,7 +56,8 @@ def get_current_relations_list(data, field) -> list[str]:
                                                                                          'object_type': related_entity_type,
                                                                                          'relation_type': relation_type})
 
-    return current_relation_by_id + current_relation_by_name
+
+    return current_relation_by_id or current_relation_by_name
 
 @helper
 def get_dataset_dict_from_dataset_id(dataset_id):
