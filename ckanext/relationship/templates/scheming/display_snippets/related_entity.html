@@ -1,29 +1,24 @@
-
 {% set selected_ids = h.relationship_get_current_relations_list(field, data) %}
 {% set selected = [] %}
+
+
 {% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
+
   {% for selected_id in selected_ids %}
+
     {% if entity['id'] == selected_id %}
-      {% do selected.append((entity.get('name'), entity.get('title'), entity.get('description') or entity.get('name'))) %}
+
+      {% do selected.append((entity.get('name'), entity.get('title') or entity.get('name'))) %}
+
     {% endif %}
   {% endfor %}
 {% endfor %}
 
 {% set selected = selected|sort(case_sensitive=false, attribute=1) %}
 
-
-{% if selected|length %}
-{% for name, title, description in selected %}
-
-    <li>
-     <strong> <a href="{{ h.url_for(field.related_entity_type + '.read', id=name, _external=True) }}">{{ title }} </a> </strong> <br>
-{#      {{ description }} #}
-    </li>
-    <br>
+{% for name, title in selected %}
+  <li>
+  <a href="{{ h.url_for(field.related_entity_type + '.read', id=name, _external=True) }}">{{ title }}</a>
+  <br>
+  </li>
 {% endfor %}
-
-{% endif %}
-
-
-
-

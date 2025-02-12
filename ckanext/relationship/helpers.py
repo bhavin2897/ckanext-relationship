@@ -15,7 +15,7 @@ helper, get_helpers = Collector("relationship").split()
 def get_entity_list(entity, entity_type, include_private=True):
     """Return ids list of specified entity (entity, entity_type)"""
     context = {}
-    if entity == 'package':
+    if entity == 'dataset' or entity == 'molecule':
         entity_list = tk.get_action('package_search')(context, {'fq': f'type:{entity_type}',
                                                                 'fl': 'id, name, title',
                                                                 'rows': 1000,
@@ -24,6 +24,7 @@ def get_entity_list(entity, entity_type, include_private=True):
     else:
         entity_list = tk.get_action('relationship_get_entity_list')(context, {'entity': entity,
                                                                               'entity_type': entity_type})
+
         entity_list = [{'id': id, 'name': name, 'title': title} for id, name, title in entity_list]
     return entity_list
 
@@ -57,7 +58,6 @@ def get_current_relations_list(data, field) -> list[str]:
 
 @helper
 def get_dataset_dict_from_dataset_id(dataset_id):
-    log.debug(f'Dataset {dataset_id}')
 
     try:
         dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
@@ -119,8 +119,6 @@ def get_molecule_search_facets(package_type, items, search_facets):
         # search_facets = pkg_dict.get('search_facets')
 
         if isinstance(measurement_technique, str):
-
-            log.debug("NON ON ")
 
             item_facet_dict['name'] = measurement_technique
             item_facet_dict['display_name'] = measurement_technique
