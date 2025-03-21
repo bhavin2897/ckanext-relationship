@@ -113,29 +113,28 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                     })
 
                 if related_dataset_ids:
-                    related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
+                    techniques = set()
+                    # related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
 
-                    try:
-                        related_dataset = tk.get_action('package_show')({}, {'id': related_dataset_id})
-                        measurement_technique = None
+                    for related_dataset_id in related_dataset_ids:
+                        try:
+                            related_dataset = tk.get_action('package_show')({}, {'id': related_dataset_id})
 
-                       # Check Main Dict
-                        measurement_technique = related_dataset['measurement_technique']
+                             # Check Main Dict
+                            technique = related_dataset['measurement_technique']
+                            if technique:
+                               techniques.add(technique.strip())
+                            break
 
-                        # Check extras
-                        # for extra in related_dataset.get('extras', []):
-                        #     if extra['key'] == 'measurement_technique':
-                        #         measurement_technique = extra['value']
-                        #         break
+                        except Exception as e:
+                            log.warning(f"Failed to fetch related dataset: {e}")
 
-                        if measurement_technique:
-                            # Add a virtual field for indexing only
-                            pkg_dict['measurement_technique_proxy'] = measurement_technique
+                    if techniques:
+                        # Add a virtual field for indexing only
+                        pkg_dict['measurement_technique_proxy'] = list(techniques)
 
-                    except Exception as e:
-                        log.warning(f"Failed to fetch related dataset: {e}")
 
-    ########################################################
+        ########################################################
 
         return pkg_dict
 
