@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="related-dataset update to view only title">
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="display related datasets on molecule-search page bug fix">
       <change afterPath="$PROJECT_DIR$/ckanext/relationship/sample.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/helpers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,8 +48,9 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;nfdi4chem&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/usr/lib/ckan/default/src/ckanext-relationship/ckanext/relationship/templates/snippets&quot;
+    &quot;last_opened_file_path&quot;: &quot;/home/katabathunib/PycharmProjects/python-ckan-projects&quot;
   }
 }</component>
   <component name="RecentsManager">
@@ -90,7 +90,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-6a3326d57233-c546a90a8094-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-242.24807.21" />
+        <option value="bundled-python-sdk-14705d77f0bb-aa17d162503b-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-243.25659.43" />
       </set>
     </attachedChunks>
   </component>
@@ -224,7 +224,31 @@
       <option name="project" value="LOCAL" />
       <updated>1732715751996</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="display related datasets on molecule-search page">
+      <option name="closed" value="true" />
+      <created>1738859693648</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1738859693648</updated>
+    </task>
+    <task id="LOCAL-00018" summary="display related datasets on molecule-search page bug fix">
+      <option name="closed" value="true" />
+      <created>1739358671085</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1739358671085</updated>
+    </task>
+    <task id="LOCAL-00019" summary="display related datasets on molecule-search page bug fix">
+      <option name="closed" value="true" />
+      <created>1739374974565</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1739374974565</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,6 +274,8 @@
     <MESSAGE value="test with missing" />
     <MESSAGE value="related-dataset not seen" />
     <MESSAGE value="related-dataset update to view only title" />
-    <option name="LAST_COMMIT_MESSAGE" value="related-dataset update to view only title" />
+    <MESSAGE value="display related datasets on molecule-search page" />
+    <MESSAGE value="display related datasets on molecule-search page bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="display related datasets on molecule-search page bug fix" />
   </component>
 </project>

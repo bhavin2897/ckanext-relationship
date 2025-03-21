@@ -9,6 +9,9 @@ import ckanext.relationship.utils as utils
 import ckanext.scheming.helpers as sch
 from ckan.lib.search import rebuild
 from ckan.logic import NotFound
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class RelationshipPlugin(plugins.SingletonPlugin):
@@ -93,6 +96,46 @@ class RelationshipPlugin(plugins.SingletonPlugin):
             pkg_dict[f'vocab_{field["field_name"]}'] = relations_ids
 
             del pkg_dict[field["field_name"]]
+
+
+    #############################################################################
+            # Only apply this logic for 'molecule' type
+            if pkg_type == 'molecule':
+                # Get related dataset IDs (assumes one-to-one for simplicity)
+                relations_info = utils.get_relations_info(pkg_type)
+                # log.debug(relations_info)
+                related_dataset_ids = tk.get_action('relationship_relations_ids_list')(
+                    {}, {
+                        'subject_id': pkg_id,
+                        'object_entity': 'package',  # The related entity name
+                        'object_type': 'dataset',  # The CKAN type of the related entity
+                        'relation_type': 'related_to'  # Update based on your model
+                    })
+
+                if related_dataset_ids:
+                    related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
+
+                    try:
+                        related_dataset = tk.get_action('package_show')({}, {'id': related_dataset_id})
+                        measurement_technique = None
+
+                       # Check Main Dict
+                        measurement_technique = related_dataset['measurement_technique']
+
+                        # Check extras
+                        # for extra in related_dataset.get('extras', []):
+                        #     if extra['key'] == 'measurement_technique':
+                        #         measurement_technique = extra['value']
+                        #         break
+
+                        if measurement_technique:
+                            # Add a virtual field for indexing only
+                            pkg_dict['measurement_technique_proxy'] = measurement_technique
+
+                    except Exception as e:
+                        log.warning(f"Failed to fetch related dataset: {e}")
+
+    ########################################################
 
         return pkg_dict
 
