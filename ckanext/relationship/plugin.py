@@ -131,6 +131,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                     if techniques:
                         # Add a virtual field for indexing only
+                        log.debug(f"Adding virtual field{techniques}")
                         pkg_dict['measurement_technique_proxy'] = list(techniques)
 
 
