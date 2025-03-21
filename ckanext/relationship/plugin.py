@@ -124,16 +124,15 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                             technique = related_dataset['measurement_technique']
                             if technique:
                                techniques.add(technique.strip())
-                            break
+
+                            # log.debug(f' added {technique}')
+
+                            if techniques:
+                            # Add a virtual field for indexing only
+                                pkg_dict['measurement_technique_proxy'] = list(techniques)
 
                         except Exception as e:
                             log.warning(f"Failed to fetch related dataset: {e}")
-
-                    if techniques:
-                        # Add a virtual field for indexing only
-                        log.debug(f"Adding virtual field{techniques}")
-                        pkg_dict['measurement_technique_proxy'] = list(techniques)
-
 
         ########################################################
 
