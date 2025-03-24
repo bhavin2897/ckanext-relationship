@@ -113,7 +113,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                     })
 
                 if related_dataset_ids:
-                    techniques = set()
+                    techniques = []
                     # related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
 
                     for related_dataset_id in related_dataset_ids:
@@ -122,10 +122,11 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                              # Check Main Dict
                             technique = related_dataset['measurement_technique']
-                            if technique:
-                               techniques.add(technique.strip())
 
-                            # log.debug(f' added {technique}')
+                            if technique:
+                               cleaned_technique = technique.strip()
+                               techniques.append(cleaned_technique)
+                              # log.debug(f'related {techniques}')
 
                             if techniques:
                             # Add a virtual field for indexing only
@@ -134,7 +135,9 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                         except Exception as e:
                             log.warning(f"Failed to fetch related dataset: {e}")
 
+                log.debug(f'Final technique list: {techniques}')
         ########################################################
+
 
         return pkg_dict
 
