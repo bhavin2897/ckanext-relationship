@@ -9,6 +9,7 @@ import ckanext.relationship.utils as utils
 import ckanext.scheming.helpers as sch
 from ckan.lib.search import rebuild
 from ckan.logic import NotFound
+from collections import Counter
 import logging
 
 log = logging.getLogger(__name__)
@@ -114,6 +115,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                 if related_dataset_ids:
                     techniques = []
+                    repository_proxy = ''
                     # related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
 
                     for related_dataset_id in related_dataset_ids:
@@ -122,22 +124,28 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                              # Check Main Dict
                             technique = related_dataset['measurement_technique']
+                            repository = related_dataset['organization']['title']
 
                             if technique:
-                               cleaned_technique = technique.strip()
-                               techniques.append(cleaned_technique)
-                              # log.debug(f'related {techniques}')
+                               #cleaned_technique = technique.strip()
+                               techniques.append(technique)
+                               # log.debug(f'related {techniques}')
 
                             if techniques:
                             # Add a virtual field for indexing only
-                                pkg_dict['measurement_technique_proxy'] = list(techniques)
+                                pkg_dict['measurement_technique_proxy'] = techniques
+
+                            if repository:
+                                repository_proxy = repository
+                                pkg_dict['organization_proxy']= repository_proxy
+                                log.debug(f'related {repositroy}')
 
                         except Exception as e:
                             log.warning(f"Failed to fetch related dataset: {e}")
 
-                log.debug(f'Final technique list: {techniques}')
-        ########################################################
+                log.debug(f"Final list:{pkg_dict['measurement_technique_proxy']}, {pkg_dict['organization_proxy']}")
 
+        ########################################################
 
         return pkg_dict
 
