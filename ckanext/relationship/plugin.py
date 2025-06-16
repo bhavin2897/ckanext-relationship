@@ -115,7 +115,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                 if related_dataset_ids:
                     techniques = []
-                    repository_proxy = ''
+                    repository_proxy = []
                     # related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
 
                     for related_dataset_id in related_dataset_ids:
@@ -136,7 +136,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                                 pkg_dict['measurement_technique_proxy'] = techniques
 
                             if repository:
-                                repository_proxy = repository
+                                repository_proxy.append(repository)
                                 pkg_dict['organization_proxy']= repository_proxy
                                 log.debug(f'related {repositroy}')
 
