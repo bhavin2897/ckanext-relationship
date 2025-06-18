@@ -9,6 +9,10 @@ import ckanext.relationship.utils as utils
 import ckanext.scheming.helpers as sch
 from ckan.lib.search import rebuild
 from ckan.logic import NotFound
+from collections import Counter
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class RelationshipPlugin(plugins.SingletonPlugin):
@@ -93,6 +97,55 @@ class RelationshipPlugin(plugins.SingletonPlugin):
             pkg_dict[f'vocab_{field["field_name"]}'] = relations_ids
 
             del pkg_dict[field["field_name"]]
+
+
+    #############################################################################
+            # Only apply this logic for 'molecule' type
+            if pkg_type == 'molecule':
+                # Get related dataset IDs (assumes one-to-one for simplicity)
+                relations_info = utils.get_relations_info(pkg_type)
+                # log.debug(relations_info)
+                related_dataset_ids = tk.get_action('relationship_relations_ids_list')(
+                    {}, {
+                        'subject_id': pkg_id,
+                        'object_entity': 'package',  # The related entity name
+                        'object_type': 'dataset',  # The CKAN type of the related entity
+                        'relation_type': 'related_to'  # Update based on your model
+                    })
+
+                if related_dataset_ids:
+                    techniques = []
+                    repository_proxy = []
+                    # related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
+
+                    for related_dataset_id in related_dataset_ids:
+                        try:
+                            related_dataset = tk.get_action('package_show')({}, {'id': related_dataset_id})
+
+                             # Check Main Dict
+                            technique = related_dataset['measurement_technique']
+                            repository = related_dataset['organization']['title']
+
+                            if technique:
+                               #cleaned_technique = technique.strip()
+                               techniques.append(technique)
+                               # log.debug(f'related {techniques}')
+
+                            if techniques:
+                            # Add a virtual field for indexing only
+                                pkg_dict['measurement_technique_proxy'] = techniques
+
+                            if repository:
+                                repository_proxy.append(repository)
+                                pkg_dict['organization_proxy']= repository_proxy
+                                log.debug(f'related {repositroy}')
+
+                        except Exception as e:
+                            log.warning(f"Failed to fetch related dataset: {e}")
+
+                log.debug(f"Final list:{pkg_dict['measurement_technique_proxy']}, {pkg_dict['organization_proxy']}")
+
+        ########################################################
 
         return pkg_dict
 
