@@ -133,12 +133,12 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                             if techniques:
                             # Add a virtual field for indexing only
-                                pkg_dict['measurement_technique_proxy'] = ', '.join(set(techniques))
+                                pkg_dict['measurement_technique_proxy'] = techniques
 
                             if repository:
                                 repository_proxy.append(repository)
-                                pkg_dict['organization_proxy']= ', '.join(set(repository_proxy))
-                                # log.debug(f'related {repository}')
+                                pkg_dict['organization_proxy']= repository_proxy
+                               #  log.debug(f'related {repositroy}')
 
                         except Exception as e:
                             log.warning(f"Failed to fetch related dataset: {e}")
