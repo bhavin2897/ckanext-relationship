@@ -138,7 +138,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                             if repository:
                                 repository_proxy.append(repository)
                                 pkg_dict['organization_proxy']= repository_proxy
-                                log.debug(f'related {repositroy}')
+                               #  log.debug(f'related {repositroy}')
 
                         except Exception as e:
                             log.warning(f"Failed to fetch related dataset: {e}")
