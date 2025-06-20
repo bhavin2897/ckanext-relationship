@@ -133,11 +133,11 @@ class RelationshipPlugin(plugins.SingletonPlugin):
 
                             if techniques:
                             # Add a virtual field for indexing only
-                                pkg_dict['measurement_technique_proxy'] = techniques # testing
+                                pkg_dict['measurement_technique_proxy'] = techniques
 
                             if repository:
                                 repository_proxy.append(repository)
-                                pkg_dict['organization_proxy']= repository_proxy # testing
+                                pkg_dict['organization_proxy']= repository_proxy
                                 log.debug(f'related {repositroy}')
 
                         except Exception as e:
