@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="updated multiple_value,  measurement_technique_proxy tokenization.">
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="bug: relationship helper function">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/templates/scheming/display_snippets/related_entity.html" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/templates/scheming/display_snippets/related_entity.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/templates/scheming/form_snippets/related_entity.html" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/templates/scheming/form_snippets/related_entity.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/templates/scheming/form_snippets/related_entity_with_autocomplete.html" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/templates/scheming/form_snippets/related_entity_with_autocomplete.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,11 +25,17 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="test-server" />
+        <entry key="$PROJECT_DIR$" value="nfdi4chem" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;bhavin2897&quot;
+  }
+}</component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>
       <filtered-out-file-type name="LOCAL_BRANCH" />
@@ -35,6 +44,22 @@
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
   </component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/bhavin2897/ckanext-relationship.git&quot;,
+    &quot;accountId&quot;: &quot;849dcb34-4f2c-4d7e-bd9c-4840c703f903&quot;
+  },
+  &quot;recentNewPullRequestHead&quot;: {
+    &quot;server&quot;: {
+      &quot;useHttp&quot;: false,
+      &quot;host&quot;: &quot;github.com&quot;,
+      &quot;port&quot;: null,
+      &quot;suffix&quot;: null
+    },
+    &quot;owner&quot;: &quot;bhavin2897&quot;,
+    &quot;repository&quot;: &quot;ckanext-relationship&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 3
@@ -47,7 +72,7 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;nfdi4chem&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test-server&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/katabathunib/PycharmProjects/python-ckan-projects&quot;
   }
 }</component>
@@ -92,7 +117,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-53e2683a6804-9cdd278e9d02-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.26094.141" />
+        <option value="bundled-python-sdk-f69e5c277ee4-cbfc7b97e6b2-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-252.27397.106" />
       </set>
     </attachedChunks>
   </component>
@@ -282,7 +307,39 @@
       <option name="project" value="LOCAL" />
       <updated>1750321744978</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="updated multiple_value,  measurement_technique_proxy tokenization.">
+      <option name="closed" value="true" />
+      <created>1750425082836</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1750425082836</updated>
+    </task>
+    <task id="LOCAL-00025" summary="updated multiple_value,  measurement_technique_proxy tokenization.">
+      <option name="closed" value="true" />
+      <created>1750425160486</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1750425160486</updated>
+    </task>
+    <task id="LOCAL-00026" summary="updated multiple_value,  measurement_technique_proxy tokenization.">
+      <option name="closed" value="true" />
+      <created>1750425276362</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1750425276362</updated>
+    </task>
+    <task id="LOCAL-00027" summary="bug: relationship helper function">
+      <option name="closed" value="true" />
+      <created>1762265930767</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1762265930767</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,6 +370,7 @@
     <MESSAGE value="indexing for multiple measurement_techniques" />
     <MESSAGE value="TODO:remove debug" />
     <MESSAGE value="updated multiple_value,  measurement_technique_proxy tokenization." />
-    <option name="LAST_COMMIT_MESSAGE" value="updated multiple_value,  measurement_technique_proxy tokenization." />
+    <MESSAGE value="bug: relationship helper function" />
+    <option name="LAST_COMMIT_MESSAGE" value="bug: relationship helper function" />
   </component>
 </project>

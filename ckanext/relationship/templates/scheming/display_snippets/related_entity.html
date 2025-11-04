@@ -1,8 +1,8 @@
-{% set selected_ids = h.get_current_relations_list(field, data) %}
+{% set selected_ids = h.relationship_get_current_relations_list(field, data) %}
 
 {% set selected = [] %}
 
-{% for entity in h.get_entity_list(field.related_entity, field.related_entity_type) %}
+{% for entity in h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
 
   {% for selected_id in selected_ids %}
 
