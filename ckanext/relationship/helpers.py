@@ -63,7 +63,7 @@ def get_current_relations_list(data, field) -> list[str]:
 def get_dataset_dict_from_dataset_id(dataset_id):
 
     try:
-        dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
+        dataset_dict = tk.get_action('package_show')({"ignore_auth": True}, {'id': dataset_id})
 
     except Exception as e:
         log.warning("Failed to fetch related dataset %s: %s", dataset_id, e)
