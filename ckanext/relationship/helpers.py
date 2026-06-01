@@ -66,8 +66,8 @@ def get_dataset_dict_from_dataset_id(dataset_id):
         dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
 
     except Exception as e:
-        log.error(f"Failed to fetch dataset with id {dataset_id}: {e}")
-        return {}
+        log.warning("Failed to fetch related dataset %s: %s", dataset_id, e)
+        pass
 
     return dataset_dict
 
@@ -174,5 +174,5 @@ def get_dataset_facets_for_molecule_search(molecule_items):
         return dataset_search_results.get("search_facets", {})
     except Exception as e:
         log.error(f"Failed to fetch dataset facets: {e}")
-        return {}
+        pass
 
