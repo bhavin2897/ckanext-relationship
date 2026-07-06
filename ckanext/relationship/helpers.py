@@ -73,6 +73,21 @@ def get_dataset_dict_from_dataset_id(dataset_id):
 
 
 @helper
+def get_dataset_dicts_from_dataset_ids(dataset_ids):
+    if not dataset_ids:
+        return []
+
+    fq = "{!terms f=id}" + ",".join(dataset_ids)
+
+    result = tk.get_action("package_search")({}, {
+        "fq": fq,
+        "rows": len(dataset_ids),
+        "fl": "id,name,title"
+    })
+
+    return result.get("results", [])
+
+@helper
 def get_selected_json(selected_ids: list = []) -> str:
     selected_pkgs = []
     for pkg_id in selected_ids:

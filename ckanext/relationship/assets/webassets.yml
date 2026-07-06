@@ -3,9 +3,11 @@
    output: ckanext-relationship/%(version)s-relationship.js
    contents:
      - js/relationship-autocomplete.js
+     - js/relationship-related-datasets.js
    extra:
      preload:
        - base/main
+
 
 # relationship-css:
 #   filter: cssrewrite
