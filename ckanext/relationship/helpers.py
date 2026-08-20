@@ -63,14 +63,29 @@ def get_current_relations_list(data, field) -> list[str]:
 def get_dataset_dict_from_dataset_id(dataset_id):
 
     try:
-        dataset_dict = tk.get_action('package_show')({}, {'id': dataset_id})
+        dataset_dict = tk.get_action('package_show')({"ignore_auth": True}, {'id': dataset_id})
 
     except Exception as e:
-        log.error(f"Failed to fetch dataset with id {dataset_id}: {e}")
-        return {}
+        log.warning("Failed to fetch related dataset %s: %s", dataset_id, e)
+        pass
 
     return dataset_dict
 
+
+@helper
+def get_dataset_dicts_from_dataset_ids(dataset_ids):
+    if not dataset_ids:
+        return []
+
+    fq = "{!terms f=id}" + ",".join(dataset_ids)
+
+    result = tk.get_action("package_search")({}, {
+        "fq": fq,
+        "rows": len(dataset_ids),
+        "fl": "id,name,title"
+    })
+
+    return result.get("results", [])
 
 @helper
 def get_selected_json(selected_ids: list = []) -> str:
@@ -174,5 +189,5 @@ def get_dataset_facets_for_molecule_search(molecule_items):
         return dataset_search_results.get("search_facets", {})
     except Exception as e:
         log.error(f"Failed to fetch dataset facets: {e}")
-        return {}
+        pass
 

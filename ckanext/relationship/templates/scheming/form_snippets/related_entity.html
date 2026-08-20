@@ -23,7 +23,10 @@
     ) %}
 
     {% set current_pkg_id = data.get('id', None) %}
-    {% set packages = h.relationship_get_entity_list(field.related_entity, field.related_entity_type) %}
+    {% set packages = [] %}
+        {% if h.get('get_entity_list') %}
+        {% set packages = h.get_entity_list(field.related_entity, field.related_entity_type) %}
+    {% endif %}
     {% set choices = [] %}
 
     {% for pkg in packages %}
@@ -39,10 +42,10 @@
     {% endif %}
 
     <select {% if field.multiple %}multiple{% endif %}
-            size='{{ field.get('select_size', field.choices|length) }}'
-            style='display: block'
-            id='field-{{ field.field_name }}'
-            name='{{ field.field_name }}'
+            size="{{ field.get('select_size', field.choices|length) }}"
+            style="display: block"
+            id="field-{{ field.field_name }}"
+            name="{{ field.field_name }}"
             {{ form.attributes(dict(
         {'data-module': 'autocomplete'}, **field.get('form_select_attrs', {}))) }}>
         {% for val, label in choices %}

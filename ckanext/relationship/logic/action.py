@@ -9,6 +9,10 @@ from ckanext.relationship.utils import entity_name_by_id
 from ckanext.toolbelt.decorators import Collector
 from sqlalchemy import or_
 
+import json
+import logging
+
+log = logging.getLogger(__name__)
 NotFound = logic.NotFound
 
 action, get_actions = Collector("relationship").split()
@@ -145,3 +149,101 @@ def get_entity_list(context, data_dict) -> list[str]:
                    .filter(entity_class.type == entity_type).all())
 
     return entity_list
+
+@action
+def related_datasets_for_molecule(context, data_dict):
+    """
+    Return lightweight related dataset data for one molecule.
+
+    Input:
+        {"dataset_ids": ["id1", "id2"]}
+
+    Output:
+        [
+            {"id": "...", "name": "...", "title": "...", "url": "/dataset/..."}
+        ]
+    """
+    dataset_ids = data_dict.get("dataset_ids", [])
+
+    if isinstance(dataset_ids, str):
+        try:
+            dataset_ids = json.loads(dataset_ids)
+        except Exception:
+            dataset_ids = [
+                item.strip().strip('"').strip("'")
+                for item in dataset_ids.split(",")
+                if item.strip()
+            ]
+
+    dataset_ids = [
+        str(dataset_id).strip().strip('"').strip("'")
+        for dataset_id in dataset_ids
+        if dataset_id
+    ]
+
+    if not dataset_ids:
+        return []
+
+    # Remove duplicates but keep order
+    seen = set()
+    dataset_ids = [
+        dataset_id
+        for dataset_id in dataset_ids
+        if not (dataset_id in seen or seen.add(dataset_id))
+    ]
+
+    results = []
+
+    # Try Solr by package id and package name
+    for field_name in ("id", "name"):
+        try:
+            fq = "{!terms f=%s}%s" % (field_name, ",".join(dataset_ids))
+
+            search_result = tk.get_action("package_search")(
+                {},
+                {
+                    "fq": fq,
+                    "rows": len(dataset_ids),
+                    "fl": "id,name,title",
+                    "include_private": True,
+                },
+            )
+
+            results.extend(search_result.get("results", []))
+
+        except Exception as e:
+            log.warning("Related datasets Solr search failed for %s: %s", field_name, e)
+
+    datasets_by_id = {}
+    datasets_by_name = {}
+
+    for dataset in results:
+        if dataset.get("id"):
+            datasets_by_id[dataset.get("id")] = dataset
+        if dataset.get("name"):
+            datasets_by_name[dataset.get("name")] = dataset
+
+    output = []
+
+    for dataset_id in dataset_ids:
+        dataset = datasets_by_id.get(dataset_id) or datasets_by_name.get(dataset_id)
+
+        # Fallback: if Solr did not find it, try package_show
+        if not dataset:
+            try:
+                dataset = tk.get_action("package_show")(
+                    {},
+                    {"id": dataset_id}
+                )
+            except Exception as e:
+                log.warning("Could not resolve related dataset %s: %s", dataset_id, e)
+                continue
+
+        output.append({
+            "id": dataset.get("id"),
+            "name": dataset.get("name"),
+            "title": dataset.get("title") or dataset.get("name") or dataset.get("id"),
+            "url": tk.h.url_for("dataset.read", id=dataset.get("name")),
+        })
+
+    return output
