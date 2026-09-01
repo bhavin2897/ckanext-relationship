@@ -4,12 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="bug: undo relationship helper function">
-      <change afterPath="$PROJECT_DIR$/ckanext/relationship/assets/js/relationship-related-datasets.js" afterDir="false" />
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="test: related datasets lazy load">
+      <change beforePath="$PROJECT_DIR$/.idea/ckanext-relationship.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ckanext-relationship.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/assets/webassets.yml" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/assets/webassets.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/helpers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/logic/action.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/logic/action.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/plugin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/tests/test_plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/tests/test_plugin.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="61" />
+    <option name="cachedIndexableFilesCount" value="62" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -71,23 +71,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000061544024743" />
-      <entry key="MS500" value="1.1026291190997557" />
-      <entry key="S2" value="2.051721136851346" />
-      <entry key="S5" value="3.317955988794103" />
-      <entry key="S10" value="4.301095846303442" />
-      <entry key="S30" value="5.322469142704914" />
-      <entry key="S60" value="5.656209448957322" />
-      <entry key="M2" value="5.925837048839479" />
-      <entry key="M5" value="6.336543420209373" />
-      <entry key="M10" value="6.603533123079193" />
-      <entry key="M15" value="6.718374706304277" />
-      <entry key="M30" value="6.849655769230011" />
-      <entry key="H1" value="6.922265350778139" />
-      <entry key="H2" value="6.960468102453473" />
-      <entry key="H4" value="6.9800648175178415" />
-      <entry key="D1" value="6.996653697905162" />
-      <entry key="W1" value="6.999521371166297" />
+      <entry key="MS100" value="1.007548288667166" />
+      <entry key="MS500" value="1.4982258365469585" />
+      <entry key="S2" value="3.571740663351056" />
+      <entry key="S5" value="5.452463704181548" />
+      <entry key="S10" value="6.5247973874652905" />
+      <entry key="S30" value="7.452830014550588" />
+      <entry key="S60" value="7.718667867255879" />
+      <entry key="M2" value="7.858396738611167" />
+      <entry key="M5" value="8.14388792304109" />
+      <entry key="M10" value="9.148554720078893" />
+      <entry key="M15" value="10.109043134946843" />
+      <entry key="M30" value="11.845618013052478" />
+      <entry key="H1" value="13.188443836726888" />
+      <entry key="H2" value="14.02644013670326" />
+      <entry key="H4" value="14.494966325524684" />
+      <entry key="D1" value="14.9131730920293" />
+      <entry key="W1" value="14.987529528278332" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -109,23 +109,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.8950306950158727" />
-      <entry key="MS500" value="1.0788751133255159" />
-      <entry key="S2" value="2.0407035032385994" />
-      <entry key="S5" value="3.308140405381914" />
-      <entry key="S10" value="4.293249946872188" />
-      <entry key="S30" value="5.318683263949962" />
-      <entry key="S60" value="5.654079373876002" />
-      <entry key="M2" value="5.924547080720946" />
-      <entry key="M5" value="6.335798634406025" />
-      <entry key="M10" value="6.603076492896638" />
-      <entry key="M15" value="6.7180454475613365" />
-      <entry key="M30" value="6.849476773204767" />
-      <entry key="H1" value="6.92217184823088" />
-      <entry key="H2" value="6.960420293815526" />
-      <entry key="H4" value="6.980040641519508" />
-      <entry key="D1" value="6.9966496302011" />
-      <entry key="W1" value="6.999520789117603" />
+      <entry key="MS100" value="0.9665552849525835" />
+      <entry key="MS500" value="1.4833443503007089" />
+      <entry key="S2" value="3.5456142314222814" />
+      <entry key="S5" value="5.433570261667791" />
+      <entry key="S10" value="6.513162072512482" />
+      <entry key="S30" value="7.448358831111175" />
+      <entry key="S60" value="7.716350338540767" />
+      <entry key="M2" value="7.85721661691171" />
+      <entry key="M5" value="8.143387135306126" />
+      <entry key="M10" value="9.148233881232597" />
+      <entry key="M15" value="10.108779022444741" />
+      <entry key="M30" value="11.84543726678387" />
+      <entry key="H1" value="13.188333664354074" />
+      <entry key="H2" value="14.026378708761687" />
+      <entry key="H4" value="14.494933814913214" />
+      <entry key="D1" value="14.913167404096587" />
+      <entry key="W1" value="14.98752870884134" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -137,21 +137,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "git-widget-placeholder": "test-server",
-    "last_opened_file_path": "/home/katabathunib/PycharmProjects/python-ckan-projects",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;test-server&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/katabathunib/PycharmProjects/python-ckan-projects&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/ckanext/relationship/templates/snippets" />
@@ -195,7 +195,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-245168a56dbd-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.25134.203" />
+        <option value="bundled-python-sdk-821f704e66d9-5bd6d13a2a75-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-262.9437.214" />
       </set>
     </attachedChunks>
   </component>
@@ -425,7 +425,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762268501750</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="test: related datasets lazy load">
+      <option name="closed" value="true" />
+      <created>1783347033819</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1783347033819</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -436,7 +444,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="github/test-server" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -458,6 +478,7 @@
     <MESSAGE value="updated multiple_value,  measurement_technique_proxy tokenization." />
     <MESSAGE value="bug: relationship helper function" />
     <MESSAGE value="bug: undo relationship helper function" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug: undo relationship helper function" />
+    <MESSAGE value="test: related datasets lazy load" />
+    <option name="LAST_COMMIT_MESSAGE" value="test: related datasets lazy load" />
   </component>
 </project>
