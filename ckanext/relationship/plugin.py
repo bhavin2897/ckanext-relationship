@@ -59,7 +59,13 @@ class RelationshipPlugin(plugins.SingletonPlugin):
     def after_update(self, context, pkg_dict):
         context = context.copy()
         context.pop("__auth_audit", None)
-        return _update_relations(context, pkg_dict)
+        rebuilt_ids = set()
+        result = _update_relations(context, pkg_dict, rebuilt_ids)
+
+        if pkg_dict.get('type') == 'dataset' and pkg_dict.get('state', 'active') == 'active':
+            _rebuild_related_molecules(context, pkg_dict['id'], rebuilt_ids)
+
+        return result
 
     def after_delete(self, context, pkg_dict):
         context = context.copy()
@@ -96,56 +102,10 @@ class RelationshipPlugin(plugins.SingletonPlugin):
             field = utils.get_relation_field(pkg_type, related_entity, related_entity_type, relation_type)
             pkg_dict[f'vocab_{field["field_name"]}'] = relations_ids
 
-            del pkg_dict[field["field_name"]]
+            pkg_dict.pop(field["field_name"], None)
 
-
-    #############################################################################
-            # Only apply this logic for 'molecule' type
-            if pkg_type == 'molecule':
-                # Get related dataset IDs (assumes one-to-one for simplicity)
-                relations_info = utils.get_relations_info(pkg_type)
-                # log.debug(relations_info)
-                related_dataset_ids = tk.get_action('relationship_relations_ids_list')(
-                    {}, {
-                        'subject_id': pkg_id,
-                        'object_entity': 'package',  # The related entity name
-                        'object_type': 'dataset',  # The CKAN type of the related entity
-                        'relation_type': 'related_to'  # Update based on your model
-                    })
-
-                if related_dataset_ids:
-                    techniques = []
-                    repository_proxy = []
-                    # related_dataset_id = related_dataset_ids[0]  # Assuming one dataset relation
-
-                    for related_dataset_id in related_dataset_ids:
-                        try:
-                            related_dataset = tk.get_action('package_show')({}, {'id': related_dataset_id})
-
-                             # Check Main Dict
-                            technique = related_dataset['measurement_technique']
-                            repository = related_dataset['organization']['title']
-
-                            if technique:
-                               #cleaned_technique = technique.strip()
-                               techniques.append(technique)
-                               # log.debug(f'related {techniques}')
-
-                            if techniques:
-                            # Add a virtual field for indexing only
-                                pkg_dict['measurement_technique_proxy'] = techniques
-
-                            if repository:
-                                repository_proxy.append(repository)
-                                pkg_dict['organization_proxy']= repository_proxy
-                               #  log.debug(f'related {repositroy}')
-
-                        except Exception as e:
-                            log.warning(f"Failed to fetch related dataset: {e}")
-
-                log.debug(f"Final list:{pkg_dict['measurement_technique_proxy']}, {pkg_dict['organization_proxy']}")
-
-        ########################################################
+        if pkg_type == 'molecule':
+            _enrich_molecule_document(pkg_dict)
 
         return pkg_dict
 
@@ -162,7 +122,9 @@ class RelationshipPlugin(plugins.SingletonPlugin):
                                                                            'relation_type': relation_type})
 
 
-def _update_relations(context, pkg_dict):
+def _update_relations(context, pkg_dict, rebuilt_ids=None):
+    if rebuilt_ids is None:
+        rebuilt_ids = set()
     subject_id = pkg_dict['id']
     add_relations = pkg_dict.get('add_relations', [])
     del_relations = pkg_dict.get('del_relations', [])
@@ -180,7 +142,122 @@ def _update_relations(context, pkg_dict):
 
         try:
             rebuild(object_id)
+            rebuilt_ids.add(object_id)
         except NotFound:
             pass
     rebuild(subject_id)
+    rebuilt_ids.add(subject_id)
     return pkg_dict
+
+
+def _append_unique_strings(target, seen, values):
+    """Append non-empty strings once, comparing values case-insensitively."""
+    if isinstance(values, str):
+        values = [values]
+    elif not isinstance(values, (list, tuple)):
+        return
+
+    for value in values:
+        if not isinstance(value, str):
+            continue
+        value = value.strip()
+        key = value.casefold()
+        if value and key not in seen:
+            seen.add(key)
+            target.append(value)
+
+
+def _enrich_molecule_document(pkg_dict):
+    pkg_id = pkg_dict.get('id')
+    techniques = []
+    organizations = []
+    technique_keys = set()
+    organization_keys = set()
+
+    try:
+        related_dataset_ids = tk.get_action('relationship_relations_ids_list')(
+            {}, {
+                'subject_id': pkg_id,
+                'object_entity': 'package',
+                'object_type': 'dataset',
+                'relation_type': 'related_to'
+            }) or []
+    except Exception as error:
+        log.warning("Failed to resolve related datasets for molecule %s: %s", pkg_id, error)
+        related_dataset_ids = []
+
+    for related_dataset_id in related_dataset_ids:
+        try:
+            related_dataset = tk.get_action('package_show')(
+                {'ignore_auth': True}, {'id': related_dataset_id})
+            if related_dataset.get('state', 'active') != 'active':
+                log.warning(
+                    "Skipping inactive related dataset %s while indexing molecule %s",
+                    related_dataset_id, pkg_id)
+                continue
+
+            _append_unique_strings(
+                techniques, technique_keys,
+                related_dataset.get('measurement_technique'))
+
+            organization = related_dataset.get('organization') or {}
+            if isinstance(organization, dict):
+                _append_unique_strings(
+                    organizations, organization_keys, organization.get('title'))
+        except Exception as error:
+            log.warning(
+                "Failed to fetch related dataset %s while indexing molecule %s: %s",
+                related_dataset_id, pkg_id, error)
+
+    if techniques:
+        pkg_dict['measurement_technique_proxy'] = techniques
+    else:
+        pkg_dict.pop('measurement_technique_proxy', None)
+
+    if organizations:
+        pkg_dict['organization_proxy'] = organizations
+    else:
+        pkg_dict.pop('organization_proxy', None)
+
+    log.debug(
+        "Molecule indexing package=%s techniques=%s organizations=%s",
+        pkg_id, techniques, organizations)
+
+
+def _rebuild_related_molecules(context, dataset_id, rebuilt_ids):
+    try:
+        molecule_ids = tk.get_action('relationship_relations_ids_list')(
+            context, {
+                'subject_id': dataset_id,
+                'object_entity': 'package',
+                'object_type': 'molecule',
+                'relation_type': 'related_to'
+            }) or []
+    except Exception:
+        log.exception("Failed to find molecules related to dataset %s", dataset_id)
+        raise
+
+    for molecule_id in set(molecule_ids):
+        if molecule_id in rebuilt_ids:
+            continue
+        try:
+            molecule = tk.get_action('package_show')(
+                dict(context, ignore_auth=True), {'id': molecule_id})
+        except Exception as error:
+            log.warning(
+                "Skipping unavailable molecule %s related to dataset %s: %s",
+                molecule_id, dataset_id, error)
+            continue
+
+        if (molecule.get('type') != 'molecule' or
+                molecule.get('state', 'active') != 'active'):
+            continue
+
+        try:
+            rebuild(molecule_id)
+            rebuilt_ids.add(molecule_id)
+        except Exception:
+            log.exception(
+                "Failed to rebuild molecule %s after dataset %s update",
+                molecule_id, dataset_id)
+            raise
