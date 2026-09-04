@@ -1,5 +1,6 @@
 """Tests for the controlled proxy-facet maintenance command."""
 import json
+import re
 
 import pytest
 from click.testing import CliRunner
@@ -76,14 +77,20 @@ def test_selection_deduplicates_ids_and_uses_only_read_only_sql():
         {'id': 'molecule-2', 'name': 'second'},
     ]
     sql = statements[0].upper()
-    assert "DATASET.STATE = 'ACTIVE'" in sql
-    assert "MOLECULE.STATE = 'ACTIVE'" in sql
-    assert "MOLECULE.TYPE = 'MOLECULE'" in sql
+    dataset_sql = sql.split('), RELATED_IDENTIFIERS', 1)[0]
+    assert re.search(r"(?:DATASET\.)?TYPE\s*=\s*'DATASET'", dataset_sql)
+    assert re.search(r"(?:DATASET\.)?STATE\s*=\s*'ACTIVE'", dataset_sql)
+    assert re.search(
+        r"OWNER_ORG\s*=\s*:ORGANIZATION_ID", dataset_sql)
+    assert re.search(r"MOLECULE\.STATE\s*=\s*'ACTIVE'", sql)
+    assert re.search(r"MOLECULE\.TYPE\s*=\s*'MOLECULE'", sql)
+    assert len(re.findall(
+        r"RELATIONSHIP\.RELATION_TYPE\s*=\s*'RELATED_TO'", sql)) == 2
     assert 'RELATIONSHIP.SUBJECT_ID IN (DATASET.ID, DATASET.NAME)' in sql
     assert 'RELATIONSHIP.OBJECT_ID IN (DATASET.ID, DATASET.NAME)' in sql
     assert 'RELATED.IDENTIFIER IN (MOLECULE.ID, MOLECULE.NAME)' in sql
-    assert not any(keyword in sql for keyword in (
-        'INSERT ', 'UPDATE ', 'DELETE ', 'TRUNCATE ', 'ALTER ', 'DROP '))
+    assert re.search(r"\b(?:INSERT|UPDATE|DELETE)\b", sql) is None
+    assert re.search(r"\b(?:TRUNCATE|ALTER|DROP)\b", sql) is None
 
 
 def test_apply_revalidates_inactive_packages_and_continues_after_failures(
