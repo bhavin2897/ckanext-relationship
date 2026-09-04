@@ -85,6 +85,54 @@ def test_multiple_datasets_are_combined_and_deduplicated(index_document):
     assert result['organization_proxy'] == ['Repository A']
 
 
+def test_organization_proxy_variants_have_one_canonical_facet(index_document):
+    variants = [
+        'Chemotion - Repository',
+        'Chemotion  -  Repository',
+        ' Chemotion - Repository ',
+        'Chemotion\u00a0-\u00a0Repository',
+        'Chemotion \u2013 Repository',
+        'Chemotion \u2014 Repository',
+        'chemotion - repository',
+    ]
+    result = index_document(
+        ['dataset-%d' % index for index in range(len(variants))],
+        {'dataset-%d' % index: {'organization': {'title': value}}
+         for index, value in enumerate(variants)})
+
+    assert result['organization_proxy'] == ['Chemotion - Repository']
+
+
+def test_proxy_normalization_ignores_invalid_and_empty_values():
+    target = []
+    seen = set()
+
+    plugin._append_unique_strings(
+        target, seen, [None, '', '  \u00a0  ', 42, {}, []])
+
+    assert target == []
+
+
+@pytest.mark.parametrize('dash', ['\u2010', '\u2011', '\u2012', '\u2013',
+                                  '\u2014', '\u2212'])
+def test_proxy_normalization_converts_supported_unicode_dashes(dash):
+    assert plugin._normalize_proxy_value(
+        'Chemotion%sRepository' % dash) == 'Chemotion - Repository'
+
+
+def test_measurement_techniques_normalize_whitespace_but_remain_distinct(
+        index_document):
+    result = index_document(['dataset-1'], {'dataset-1': {
+        'measurement_technique': [
+            'Mass\u00a0spectrometry', 'Mass   spectrometry', 'NMR', 'IR'
+        ]
+    }})
+
+    assert result['measurement_technique_proxy'] == [
+        'Mass spectrometry', 'NMR', 'IR'
+    ]
+
+
 def test_unavailable_and_deleted_datasets_do_not_abort(
         index_document, monkeypatch):
     warnings = []
@@ -179,6 +227,31 @@ def test_relationship_update_is_preserved_without_double_rebuild(monkeypatch):
     assert len(created) == 1
     assert calls.count('molecule-1') == 1
     assert calls.count('dataset-1') == 1
+
+
+def test_relationship_deletion_is_preserved(monkeypatch):
+    calls = []
+    deleted = []
+
+    def get_action(name):
+        if name == 'relationship_relation_delete':
+            return lambda context, data: deleted.append(data)
+        if name == 'relationship_relations_ids_list':
+            return lambda context, data: []
+        raise AssertionError('unexpected action: %s' % name)
+
+    monkeypatch.setattr(plugin.tk, 'get_action', get_action)
+    monkeypatch.setattr(plugin, 'rebuild', calls.append)
+    plugin.RelationshipPlugin().after_update({}, {
+        'id': 'dataset-1', 'type': 'dataset', 'state': 'active',
+        'del_relations': [('molecule-1', 'related_to')],
+    })
+
+    assert deleted == [{
+        'subject_id': 'dataset-1', 'object_id': 'molecule-1',
+        'relation_type': 'related_to',
+    }]
+    assert calls == ['molecule-1', 'dataset-1']
 
 
 def test_inactive_dataset_update_does_not_rebuild(monkeypatch):

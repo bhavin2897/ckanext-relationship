@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="test: related datasets lazy load">
-      <change beforePath="$PROJECT_DIR$/.idea/ckanext-relationship.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ckanext-relationship.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/plugin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/tests/test_plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/tests/test_plugin.py" afterDir="false" />
-    </list>
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="test: related molecules measurement" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -71,23 +65,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.007548288667166" />
-      <entry key="MS500" value="1.4982258365469585" />
-      <entry key="S2" value="3.571740663351056" />
-      <entry key="S5" value="5.452463704181548" />
-      <entry key="S10" value="6.5247973874652905" />
-      <entry key="S30" value="7.452830014550588" />
-      <entry key="S60" value="7.718667867255879" />
-      <entry key="M2" value="7.858396738611167" />
-      <entry key="M5" value="8.14388792304109" />
-      <entry key="M10" value="9.148554720078893" />
-      <entry key="M15" value="10.109043134946843" />
-      <entry key="M30" value="11.845618013052478" />
-      <entry key="H1" value="13.188443836726888" />
-      <entry key="H2" value="14.02644013670326" />
-      <entry key="H4" value="14.494966325524684" />
-      <entry key="D1" value="14.9131730920293" />
-      <entry key="W1" value="14.987529528278332" />
+      <entry key="MS100" value="1.032352028909524" />
+      <entry key="MS500" value="1.521954294795243" />
+      <entry key="S2" value="3.300107640032715" />
+      <entry key="S5" value="6.275730743294766" />
+      <entry key="S10" value="8.468838829378193" />
+      <entry key="S30" value="10.624299940735021" />
+      <entry key="S60" value="11.283227588621694" />
+      <entry key="M2" value="11.635073388894046" />
+      <entry key="M5" value="12.051352462113073" />
+      <entry key="M10" value="13.097588416394462" />
+      <entry key="M15" value="14.072109386439648" />
+      <entry key="M30" value="15.82448582246633" />
+      <entry key="H1" value="17.17684824015927" />
+      <entry key="H2" value="18.02032119293021" />
+      <entry key="H4" value="18.49181708531057" />
+      <entry key="D1" value="18.912634864711126" />
+      <entry key="W1" value="18.987452299481333" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -109,23 +103,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9665552849525835" />
-      <entry key="MS500" value="1.4833443503007089" />
-      <entry key="S2" value="3.5456142314222814" />
-      <entry key="S5" value="5.433570261667791" />
-      <entry key="S10" value="6.513162072512482" />
-      <entry key="S30" value="7.448358831111175" />
-      <entry key="S60" value="7.716350338540767" />
-      <entry key="M2" value="7.85721661691171" />
-      <entry key="M5" value="8.143387135306126" />
-      <entry key="M10" value="9.148233881232597" />
-      <entry key="M15" value="10.108779022444741" />
-      <entry key="M30" value="11.84543726678387" />
-      <entry key="H1" value="13.188333664354074" />
-      <entry key="H2" value="14.026378708761687" />
-      <entry key="H4" value="14.494933814913214" />
-      <entry key="D1" value="14.913167404096587" />
-      <entry key="W1" value="14.98752870884134" />
+      <entry key="MS100" value="0.9900838913782521" />
+      <entry key="MS500" value="1.5085946531691126" />
+      <entry key="S2" value="3.2875141503161194" />
+      <entry key="S5" value="6.2614534339280965" />
+      <entry key="S10" value="8.458050564214211" />
+      <entry key="S30" value="10.61949857419322" />
+      <entry key="S60" value="11.280643027843837" />
+      <entry key="M2" value="11.63373201020552" />
+      <entry key="M5" value="12.050780419918828" />
+      <entry key="M10" value="13.097231027408911" />
+      <entry key="M15" value="14.071820711401807" />
+      <entry key="M30" value="15.824292656218578" />
+      <entry key="H1" value="17.176731801015368" />
+      <entry key="H2" value="18.020256612259818" />
+      <entry key="H4" value="18.49178299262945" />
+      <entry key="D1" value="18.912628912220864" />
+      <entry key="W1" value="18.987451442227645" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -433,7 +427,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783347033819</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="test: related molecules measurement">
+      <option name="closed" value="true" />
+      <created>1788268387264</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1788268387264</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,6 +481,7 @@
     <MESSAGE value="bug: relationship helper function" />
     <MESSAGE value="bug: undo relationship helper function" />
     <MESSAGE value="test: related datasets lazy load" />
-    <option name="LAST_COMMIT_MESSAGE" value="test: related datasets lazy load" />
+    <MESSAGE value="test: related molecules measurement" />
+    <option name="LAST_COMMIT_MESSAGE" value="test: related molecules measurement" />
   </component>
 </project>

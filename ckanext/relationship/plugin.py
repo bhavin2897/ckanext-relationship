@@ -11,8 +11,14 @@ from ckan.lib.search import rebuild
 from ckan.logic import NotFound
 from collections import Counter
 import logging
+import re
+import unicodedata
 
 log = logging.getLogger(__name__)
+
+DASHES = re.compile(r"[\u2010\u2011\u2012\u2013\u2014\u2212]")
+WHITESPACE = re.compile(r"\s+")
+WHITESPACE_AROUND_DASH = re.compile(r"\s*-\s*")
 
 
 class RelationshipPlugin(plugins.SingletonPlugin):
@@ -150,6 +156,19 @@ def _update_relations(context, pkg_dict, rebuilt_ids=None):
     return pkg_dict
 
 
+def _normalize_proxy_value(value):
+    """Return a canonical display value for a proxy facet label."""
+    if not isinstance(value, str):
+        return None
+
+    value = unicodedata.normalize("NFKC", value)
+    value = DASHES.sub("-", value)
+    value = WHITESPACE.sub(" ", value).strip()
+    value = WHITESPACE_AROUND_DASH.sub(" - ", value)
+    value = WHITESPACE.sub(" ", value).strip()
+    return value or None
+
+
 def _append_unique_strings(target, seen, values):
     """Append non-empty strings once, comparing values case-insensitively."""
     if isinstance(values, str):
@@ -158,11 +177,11 @@ def _append_unique_strings(target, seen, values):
         return
 
     for value in values:
-        if not isinstance(value, str):
+        value = _normalize_proxy_value(value)
+        if value is None:
             continue
-        value = value.strip()
         key = value.casefold()
-        if value and key not in seen:
+        if key not in seen:
             seen.add(key)
             target.append(value)
 
