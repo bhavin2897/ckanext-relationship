@@ -8,12 +8,13 @@ from click.testing import CliRunner
 import ckanext.relationship.cli as cli
 
 
-def _organization_action(name):
-    assert name == 'organization_show'
-    return lambda context, data: {
+def _organization():
+    return {
         'id': 'organization-id',
         'name': 'chemotion-repository',
         'title': 'Chemotion - Repository ',
+        'type': 'organization',
+        'state': 'active',
     }
 
 
@@ -23,7 +24,12 @@ def _molecules(*identifiers):
 
 
 def test_dry_run_does_not_write_to_solr(monkeypatch):
-    monkeypatch.setattr(cli.tk, 'get_action', _organization_action)
+    monkeypatch.setattr(
+        cli, '_load_active_organization',
+        lambda session, reference: _organization())
+    monkeypatch.setattr(
+        cli.tk, 'get_action',
+        lambda name: pytest.fail('%s action was called' % name))
     monkeypatch.setattr(cli, '_select_molecules',
                         lambda organization_id: _molecules('molecule-1'))
     monkeypatch.setattr(
@@ -37,6 +43,119 @@ def test_dry_run_does_not_write_to_solr(monkeypatch):
     assert result.exit_code == 0
     assert '"status": "validated"' in result.output
     assert 'selected=1 reindexed=0 failed=0 database_changed=false' in result.output
+
+
+@pytest.mark.parametrize('reference', [
+    'chemotion-repository',
+    '11111111-2222-3333-4444-555555555555',
+])
+def test_organization_lookup_works_by_name_or_uuid(reference):
+    statements = []
+
+    class Result(object):
+        def fetchone(self):
+            return ('organization-id', 'chemotion-repository',
+                    'Chemotion - Repository', 'organization', 'active')
+
+    class Session(object):
+        def execute(self, statement, parameters):
+            statements.append(str(statement))
+            assert parameters == {'organization': reference}
+            return Result()
+
+    assert cli._load_active_organization(Session(), reference) == {
+        'id': 'organization-id',
+        'name': 'chemotion-repository',
+        'title': 'Chemotion - Repository',
+        'type': 'organization',
+        'state': 'active',
+    }
+    sql = statements[0].upper()
+    assert sql.lstrip().startswith('SELECT ')
+    assert 'FROM PUBLIC."GROUP"' in sql
+    assert re.search(r"ID\s*=\s*:ORGANIZATION", sql)
+    assert re.search(r"NAME\s*=\s*:ORGANIZATION", sql)
+    assert re.search(r"\b(?:INSERT|UPDATE|DELETE)\b", sql) is None
+
+
+@pytest.mark.parametrize('row, expected_message', [
+    (None, 'was not found'),
+    (('organization-id', 'deleted', 'Deleted', 'organization', 'deleted'),
+     'is not active'),
+    (('group-id', 'ordinary-group', 'Ordinary group', 'group', 'active'),
+     'is not an organization'),
+])
+def test_invalid_organization_is_rejected(row, expected_message):
+    class Result(object):
+        def fetchone(self):
+            return row
+
+    class Session(object):
+        def execute(self, statement, parameters):
+            return Result()
+
+    with pytest.raises(cli.MoleculeProxyReindexError) as error:
+        cli._load_active_organization(Session(), 'organization-reference')
+    assert expected_message in str(error.value)
+
+
+def test_dry_run_uses_only_selects_without_request_context(monkeypatch):
+    statements = []
+
+    class Result(object):
+        def __init__(self, rows):
+            self.rows = rows
+
+        def fetchone(self):
+            return self.rows[0] if self.rows else None
+
+        def fetchall(self):
+            return self.rows
+
+    class Session(object):
+        def execute(self, statement, parameters):
+            sql = str(statement)
+            statements.append(sql)
+            if 'public."group"' in sql:
+                return Result([(
+                    'organization-id', 'chemotion-repository',
+                    'Chemotion - Repository', 'organization', 'active')])
+            return Result([('molecule-1', 'molecule-name')])
+
+    monkeypatch.setattr(cli.model, 'Session', Session())
+    monkeypatch.setattr(
+        cli.tk, 'get_action',
+        lambda name: pytest.fail('%s action was called' % name))
+    monkeypatch.setattr(
+        cli, 'rebuild',
+        lambda package_id: pytest.fail('dry-run attempted a Solr write'))
+
+    result = CliRunner().invoke(cli.relationship, [
+        'reindex-organization-proxy',
+        '--organization', 'chemotion-repository', '--dry-run'])
+
+    assert result.exit_code == 0
+    assert len(statements) == 2
+    assert all(statement.lstrip().upper().startswith(
+        ('SELECT ', 'WITH ')) for statement in statements)
+    assert all(re.search(r"\b(?:INSERT|UPDATE|DELETE)\b",
+                         statement.upper()) is None
+               for statement in statements)
+
+
+def test_unexpected_selection_error_is_concise(monkeypatch):
+    def fail(session, reference):
+        raise RuntimeError('database unavailable')
+
+    monkeypatch.setattr(cli, '_load_active_organization', fail)
+    result = CliRunner().invoke(cli.relationship, [
+        'reindex-organization-proxy',
+        '--organization', 'chemotion-repository', '--dry-run'])
+
+    assert result.exit_code == 1
+    assert 'Error: Unable to select molecules' in result.output
+    assert 'database unavailable' in result.output
+    assert 'Traceback' not in result.output
 
 
 @pytest.mark.parametrize('options, expected_message', [
@@ -99,8 +218,6 @@ def test_apply_revalidates_inactive_packages_and_continues_after_failures(
     rebuilt = []
 
     def get_action(name):
-        if name == 'organization_show':
-            return _organization_action(name)
         if name == 'package_show':
             def package_show(context, data):
                 if data['id'] == 'inactive':
@@ -117,6 +234,9 @@ def test_apply_revalidates_inactive_packages_and_continues_after_failures(
             raise RuntimeError('Solr unavailable')
 
     monkeypatch.setattr(cli.tk, 'get_action', get_action)
+    monkeypatch.setattr(
+        cli, '_load_active_organization',
+        lambda session, reference: _organization())
     monkeypatch.setattr(cli, '_select_molecules',
                         lambda organization_id: selected)
     monkeypatch.setattr(cli, 'rebuild', rebuild)
@@ -144,7 +264,12 @@ def test_apply_revalidates_inactive_packages_and_continues_after_failures(
 
 
 def test_expected_count_mismatch_performs_no_reindex(monkeypatch, tmp_path):
-    monkeypatch.setattr(cli.tk, 'get_action', _organization_action)
+    monkeypatch.setattr(
+        cli, '_load_active_organization',
+        lambda session, reference: _organization())
+    monkeypatch.setattr(
+        cli.tk, 'get_action',
+        lambda name: pytest.fail('%s action was called' % name))
     monkeypatch.setattr(cli, '_select_molecules',
                         lambda organization_id: _molecules('molecule-1'))
     monkeypatch.setattr(

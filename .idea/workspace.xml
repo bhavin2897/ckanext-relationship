@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="test: related molecules measurement">
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/plugin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ckanext/relationship/tests/test_plugin.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/tests/test_plugin.py" afterDir="false" />
+    <list default="true" id="9ad1e227-fbcd-45df-8548-ea7cdea2a4de" name="Default Changelist" comment="fix: solr indexing">
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ckanext/relationship/tests/test_cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/ckanext/relationship/tests/test_cli.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,23 +68,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.032352028909524" />
-      <entry key="MS500" value="1.521954294795243" />
-      <entry key="S2" value="3.300107640032715" />
-      <entry key="S5" value="6.275730743294766" />
-      <entry key="S10" value="8.468838829378193" />
-      <entry key="S30" value="10.624299940735021" />
-      <entry key="S60" value="11.283227588621694" />
-      <entry key="M2" value="11.635073388894046" />
-      <entry key="M5" value="12.051352462113073" />
-      <entry key="M10" value="13.097588416394462" />
-      <entry key="M15" value="14.072109386439648" />
-      <entry key="M30" value="15.82448582246633" />
-      <entry key="H1" value="17.17684824015927" />
-      <entry key="H2" value="18.02032119293021" />
-      <entry key="H4" value="18.49181708531057" />
-      <entry key="D1" value="18.912634864711126" />
-      <entry key="W1" value="18.987452299481333" />
+      <entry key="MS100" value="1.032577085322635" />
+      <entry key="MS500" value="1.5562477708965479" />
+      <entry key="S2" value="3.556208452205118" />
+      <entry key="S5" value="7.13833874887396" />
+      <entry key="S10" value="10.251324542088836" />
+      <entry key="S30" value="13.660867470799522" />
+      <entry key="S60" value="14.766186644241913" />
+      <entry key="M2" value="15.367035301089327" />
+      <entry key="M5" value="15.940179378263862" />
+      <entry key="M10" value="17.03770252962929" />
+      <entry key="M15" value="18.02955546334416" />
+      <entry key="M30" value="19.800852209274456" />
+      <entry key="H1" value="21.164123280470328" />
+      <entry key="H2" value="22.0136756207967" />
+      <entry key="H4" value="22.488415188280293" />
+      <entry key="D1" value="22.912056114859862" />
+      <entry key="W1" value="22.98736932207657" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -106,23 +106,23 @@
       <entry key="W1" value="0.0" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9900838913782521" />
-      <entry key="MS500" value="1.5085946531691126" />
-      <entry key="S2" value="3.2875141503161194" />
-      <entry key="S5" value="6.2614534339280965" />
-      <entry key="S10" value="8.458050564214211" />
-      <entry key="S30" value="10.61949857419322" />
-      <entry key="S60" value="11.280643027843837" />
-      <entry key="M2" value="11.63373201020552" />
-      <entry key="M5" value="12.050780419918828" />
-      <entry key="M10" value="13.097231027408911" />
-      <entry key="M15" value="14.071820711401807" />
-      <entry key="M30" value="15.824292656218578" />
-      <entry key="H1" value="17.176731801015368" />
-      <entry key="H2" value="18.020256612259818" />
-      <entry key="H4" value="18.49178299262945" />
-      <entry key="D1" value="18.912628912220864" />
-      <entry key="W1" value="18.987451442227645" />
+      <entry key="MS100" value="0.9963318231470149" />
+      <entry key="MS500" value="1.5412946020776026" />
+      <entry key="S2" value="3.542636817358117" />
+      <entry key="S5" value="7.123647908651077" />
+      <entry key="S10" value="10.239424307528031" />
+      <entry key="S30" value="13.655167735458493" />
+      <entry key="S60" value="14.763051877833998" />
+      <entry key="M2" value="15.365390131185437" />
+      <entry key="M5" value="15.939478637727767" />
+      <entry key="M10" value="17.03727975241452" />
+      <entry key="M15" value="18.029222972226204" />
+      <entry key="M30" value="19.8006369870547" />
+      <entry key="H1" value="21.16399575694791" />
+      <entry key="H2" value="22.01360547931938" />
+      <entry key="H4" value="22.48837830977788" />
+      <entry key="D1" value="22.912049697237276" />
+      <entry key="W1" value="22.98736839835403" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -446,7 +446,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788516536222</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="fix: solr indexing">
+      <option name="closed" value="true" />
+      <created>1788517930180</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1788517930181</updated>
+    </task>
+    <task id="LOCAL-00033" summary="fix: solr indexing">
+      <option name="closed" value="true" />
+      <created>1788518288541</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1788518288541</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -493,6 +509,7 @@
     <MESSAGE value="bug: undo relationship helper function" />
     <MESSAGE value="test: related datasets lazy load" />
     <MESSAGE value="test: related molecules measurement" />
-    <option name="LAST_COMMIT_MESSAGE" value="test: related molecules measurement" />
+    <MESSAGE value="fix: solr indexing" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix: solr indexing" />
   </component>
 </project>
