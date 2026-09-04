@@ -13,8 +13,9 @@ def _organization():
         'id': 'organization-id',
         'name': 'chemotion-repository',
         'title': 'Chemotion - Repository ',
-        'type': 'organization',
+        'type': 'repository',
         'state': 'active',
+        'is_organization': True,
     }
 
 
@@ -42,20 +43,22 @@ def test_dry_run_does_not_write_to_solr(monkeypatch):
 
     assert result.exit_code == 0
     assert '"status": "validated"' in result.output
+    assert '"organization_type": "repository"' in result.output
     assert 'selected=1 reindexed=0 failed=0 database_changed=false' in result.output
 
 
-@pytest.mark.parametrize('reference', [
-    'chemotion-repository',
-    '11111111-2222-3333-4444-555555555555',
+@pytest.mark.parametrize('reference, organization_type', [
+    ('chemotion-repository', 'repository'),
+    ('11111111-2222-3333-4444-555555555555', 'organization'),
 ])
-def test_organization_lookup_works_by_name_or_uuid(reference):
+def test_organization_lookup_works_by_name_or_uuid(
+        reference, organization_type):
     statements = []
 
     class Result(object):
         def fetchone(self):
             return ('organization-id', 'chemotion-repository',
-                    'Chemotion - Repository', 'organization', 'active')
+                    'Chemotion - Repository', organization_type, 'active', True)
 
     class Session(object):
         def execute(self, statement, parameters):
@@ -67,22 +70,24 @@ def test_organization_lookup_works_by_name_or_uuid(reference):
         'id': 'organization-id',
         'name': 'chemotion-repository',
         'title': 'Chemotion - Repository',
-        'type': 'organization',
+        'type': organization_type,
         'state': 'active',
+        'is_organization': True,
     }
     sql = statements[0].upper()
     assert sql.lstrip().startswith('SELECT ')
     assert 'FROM PUBLIC."GROUP"' in sql
     assert re.search(r"ID\s*=\s*:ORGANIZATION", sql)
     assert re.search(r"NAME\s*=\s*:ORGANIZATION", sql)
+    assert re.search(r"IS_ORGANIZATION\s+IS\s+TRUE", sql)
     assert re.search(r"\b(?:INSERT|UPDATE|DELETE)\b", sql) is None
 
 
 @pytest.mark.parametrize('row, expected_message', [
     (None, 'was not found'),
-    (('organization-id', 'deleted', 'Deleted', 'organization', 'deleted'),
+    (('organization-id', 'deleted', 'Deleted', 'repository', 'deleted', True),
      'is not active'),
-    (('group-id', 'ordinary-group', 'Ordinary group', 'group', 'active'),
+    (('group-id', 'ordinary-group', 'Ordinary group', 'group', 'active', False),
      'is not an organization'),
 ])
 def test_invalid_organization_is_rejected(row, expected_message):
@@ -119,7 +124,7 @@ def test_dry_run_uses_only_selects_without_request_context(monkeypatch):
             if 'public."group"' in sql:
                 return Result([(
                     'organization-id', 'chemotion-repository',
-                    'Chemotion - Repository', 'organization', 'active')])
+                    'Chemotion - Repository', 'repository', 'active', True)])
             return Result([('molecule-1', 'molecule-name')])
 
     monkeypatch.setattr(cli.model, 'Session', Session())
@@ -258,6 +263,8 @@ def test_apply_revalidates_inactive_packages_and_continues_after_failures(
         'failed', 'failed', 'reindexed']
     assert records[0]['error'] == 'Package is no longer an active molecule'
     assert records[1]['error'] == 'Solr unavailable'
+    assert all(record['organization_type'] == 'repository'
+               for record in records)
     assert all(record['expected_canonical_proxy'] ==
                'Chemotion - Repository' for record in records)
     assert 'selected=3 reindexed=1 failed=2 database_changed=false' in result.output

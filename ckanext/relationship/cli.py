@@ -12,9 +12,10 @@ from sqlalchemy import text
 CONFIRMATION = 'REINDEX_NORMALIZED_PROXY_FACETS'
 
 ORGANIZATION_SQL = text("""
-SELECT id, name, title, type, state
+SELECT id, name, title, type, state, is_organization
   FROM public."group"
- WHERE id = :organization OR name = :organization
+ WHERE (id = :organization OR name = :organization)
+   AND is_organization IS TRUE
  LIMIT 1
 """)
 
@@ -91,8 +92,9 @@ def _load_active_organization(session, organization_reference):
         'title': row[2],
         'type': row[3],
         'state': row[4],
+        'is_organization': row[5],
     }
-    if organization['type'] != 'organization':
+    if organization['is_organization'] is not True:
         raise MoleculeProxyReindexError(
             '%s is not an organization.' % organization_reference)
     if organization['state'] != 'active':
@@ -118,12 +120,13 @@ def _select_molecules(organization_id, session=None):
     return [molecules[key] for key in sorted(molecules)]
 
 
-def _audit_record(molecule, organization_name, status, expected_proxy,
-                  error=None, previous_proxy=None):
+def _audit_record(molecule, organization_name, organization_type, status,
+                  expected_proxy, error=None, previous_proxy=None):
     return {
         'molecule_id': molecule.get('id'),
         'molecule_name': molecule.get('name'),
         'organization_name': organization_name,
+        'organization_type': organization_type,
         'status': status,
         'previous_proxy': previous_proxy,
         'expected_canonical_proxy': expected_proxy,
@@ -176,6 +179,7 @@ def reindex_organization_proxy(organization, dry_run, apply_changes,
             model.Session, organization)
         organization_id = organization_dict['id']
         organization_name = organization_dict['name']
+        organization_type = organization_dict['type']
         expected_proxy = _expected_proxy(
             organization_dict, organization_name)
         molecules = _select_molecules(organization_id)
@@ -200,7 +204,8 @@ def reindex_organization_proxy(organization, dry_run, apply_changes,
         for selected in molecules:
             if dry_run:
                 _write_record(audit_handle, _audit_record(
-                    selected, organization_name, 'validated', expected_proxy))
+                    selected, organization_name, organization_type,
+                    'validated', expected_proxy))
                 continue
 
             molecule = selected
@@ -219,8 +224,8 @@ def reindex_organization_proxy(organization, dry_run, apply_changes,
                 error = str(exception)
                 failed += 1
             _write_record(audit_handle, _audit_record(
-                molecule, organization_name, status, expected_proxy,
-                error=error))
+                molecule, organization_name, organization_type, status,
+                expected_proxy, error=error))
     finally:
         if audit_handle is not None:
             audit_handle.close()
