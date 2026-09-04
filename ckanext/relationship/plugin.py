@@ -1,6 +1,7 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as tk
 import ckanext.relationship.helpers as helpers
+import ckanext.relationship.cli as cli
 import ckanext.relationship.views as views
 import ckanext.relationship.logic.action as action
 import ckanext.relationship.logic.auth as auth
@@ -28,6 +29,7 @@ class RelationshipPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IValidators)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IBlueprint)
+    plugins.implements(plugins.IClick)
     plugins.implements(plugins.IPackageController, inherit=True)
 
     # IConfigurer
@@ -55,6 +57,10 @@ class RelationshipPlugin(plugins.SingletonPlugin):
     # IBlueprint
     def get_blueprint(self):
         return views.get_blueprints()
+
+    # IClick
+    def get_commands(self):
+        return cli.get_commands()
 
     # IPackageController
     def after_create(self, context, pkg_dict):

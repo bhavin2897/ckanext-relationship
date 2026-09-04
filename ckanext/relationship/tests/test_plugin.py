@@ -89,7 +89,10 @@ def test_organization_proxy_variants_have_one_canonical_facet(index_document):
     variants = [
         'Chemotion - Repository',
         'Chemotion  -  Repository',
+        'Chemotion\t-\tRepository',
+        'Chemotion\n-\nRepository',
         ' Chemotion - Repository ',
+        'Chemotion - Repository   ',
         'Chemotion\u00a0-\u00a0Repository',
         'Chemotion \u2013 Repository',
         'Chemotion \u2014 Repository',
@@ -101,6 +104,7 @@ def test_organization_proxy_variants_have_one_canonical_facet(index_document):
          for index, value in enumerate(variants)})
 
     assert result['organization_proxy'] == ['Chemotion - Repository']
+    assert result['organization_proxy'][0].endswith(' ') is False
 
 
 def test_proxy_normalization_ignores_invalid_and_empty_values():
